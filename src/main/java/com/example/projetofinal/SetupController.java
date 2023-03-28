@@ -27,7 +27,7 @@ public class SetupController {
     @FXML
     private Button setupButton;
     final FileChooser fileChooser = new FileChooser();
-    private Data inputData;
+    public static Data inputData;
     private RadioButton[][] setupButtons;
     @FXML
     private HBox setupButtonContainer;
@@ -184,7 +184,7 @@ public class SetupController {
     // Function that opens a new window
     protected void newWindow(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("home-screen.fxml"))));
+        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("program-screen.xml"))));
         stage.setScene(scene);
     }
 }
