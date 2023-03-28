@@ -1,6 +1,9 @@
 package com.example.projetofinal;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -9,13 +12,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.deidentifier.arx.AttributeType;
+import org.deidentifier.arx.Data;
+import org.deidentifier.arx.DataType;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-
-// ARX imports
-import org.deidentifier.arx.*;
+import java.util.Objects;
 
 public class SetupController {
     @FXML
@@ -46,7 +50,11 @@ public class SetupController {
 
             } else if (setupButton.getText().equals("ACCEPT")) { // Defining attribute types
                 defineAttributeTypes();
-                newWindow();
+                try {
+                    newWindow(event);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
@@ -83,20 +91,29 @@ public class SetupController {
 
     // Function that opens the window to define the data types
     protected void dataTypeWindow() {
-        setupTitle.setText("Escolha o tipo de dados");
+        setupTitle.setText("Data Type");
         setupButton.setText("CONTINUE");
         int numeroColunas = inputData.getHandle().getNumColumns();
         setupButtons = new RadioButton[numeroColunas][NUMERO_TIPOS];
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
+            Label columnName = new Label(inputData.getHandle().getAttributeName(indexColuna));
+            columnName.setStyle("-fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;-fx-alignment: center;");
             ToggleGroup buttonGroup = new ToggleGroup();
             for (int indexTipo = 0; indexTipo < NUMERO_TIPOS; indexTipo++) {
                 RadioButton button = new RadioButton(dataTypes[indexTipo]);
-                // Set style
-                button.setStyle("-fx-background-color: #2c2f33; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px 10px 10px 10px; -fx-border-color: #ffffff; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+                button.setStyle("-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;");
                 button.setToggleGroup(buttonGroup);
                 setupButtons[indexColuna][indexTipo] = button;
+                button.selectedProperty().addListener(event -> {
+                    if (button.isSelected()) {
+                        button.setStyle("-fx-background-color: #6794B5; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;");
+                    } else {
+                        button.setStyle("-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;");
+                    }
+                });
             }
             VBox dataTypeColumn = new VBox();
+            dataTypeColumn.getChildren().addAll(columnName);
             dataTypeColumn.getChildren().addAll(setupButtons[indexColuna]);
             setupButtonContainer.getChildren().add(dataTypeColumn);
         }
@@ -115,16 +132,11 @@ public class SetupController {
                     continue;
                 }
                 switch (indexTipo) {
-                    case 0 ->
-                            inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.STRING);
-                    case 1 ->
-                            inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.INTEGER);
-                    case 2 ->
-                            inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.ORDERED_STRING);
-                    case 3 ->
-                            inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.DATE);
-                    case 4 ->
-                            inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.DECIMAL);
+                    case 0 -> inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.STRING);
+                    case 1 -> inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.INTEGER);
+                    case 2 -> inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.ORDERED_STRING);
+                    case 3 -> inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.DATE);
+                    case 4 -> inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.DECIMAL);
                 }
             }
         }
@@ -132,12 +144,13 @@ public class SetupController {
 
     // Function that opens the window to define the attribute types
     protected void attributeTypeWindow() {
-        setupTitle.setText("Escolha o tipo de atributo");
+        setupTitle.setText("Attribute Type");
         setupButton.setText("ACCEPT");
         int numeroColunas = inputData.getHandle().getNumColumns();
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
             for (int indexTipo = 0; indexTipo < NUMERO_TIPOS; indexTipo++) {
-                setupButtons[numeroColunas][indexTipo].setText(attributeTypes[indexTipo]);
+                setupButtons[indexColuna][indexTipo].setSelected(false);
+                setupButtons[indexColuna][indexTipo].setText(attributeTypes[indexTipo]);
             }
         }
     }
@@ -169,8 +182,9 @@ public class SetupController {
     }
 
     // Function that opens a new window
-    protected void newWindow(){
-        Stage stage = new Stage();
-        stage.setTitle("New Window");
+    protected void newWindow(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("home-screen.fxml"))));
+        stage.setScene(scene);
     }
 }
