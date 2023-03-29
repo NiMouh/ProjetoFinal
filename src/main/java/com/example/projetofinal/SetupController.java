@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -31,10 +32,15 @@ public class SetupController {
     private RadioButton[][] setupButtons;
     @FXML
     private HBox setupButtonContainer;
+    @FXML
+    private BorderPane mainPage;
     private static final String[] dataTypes = {"String", "Integer", "Ordinal", "Date", "Decimal"};
 
     private static final String[] attributeTypes = {"Identifying", "Sensitive", "Not Sensitive", "Quasi-identifying", "Suppressed"};
     private static final int NUMERO_TIPOS = 5;
+
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     public void initialize() {
         setupButton.setOnAction(event -> {
@@ -57,6 +63,7 @@ public class SetupController {
                 }
             }
         });
+        makeStageDraggable();
     }
 
     // Function that if the button is pressed the window closes
@@ -77,6 +84,31 @@ public class SetupController {
     protected void onMaximizeButtonClick() {
         Stage stage = (Stage) setupTitle.getScene().getWindow();
         stage.setMaximized(true);
+    }
+
+    @FXML
+    protected void makeStageDraggable() {
+        mainPage.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        mainPage.setOnMouseDragged(event -> {
+            Stage stage = (Stage) mainPage.getScene().getWindow();
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+            stage.setOpacity(0.8f);
+        });
+
+        mainPage.setOnDragDone(event -> {
+            Stage stage = (Stage) mainPage.getScene().getWindow();
+            stage.setOpacity(1.0f);
+        });
+
+        mainPage.setOnMouseReleased(event -> {
+            Stage stage = (Stage) mainPage.getScene().getWindow();
+            stage.setOpacity(1.0f);
+        });
     }
 
     // Function that imports the data from the file

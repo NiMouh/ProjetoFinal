@@ -15,7 +15,7 @@ public class SetupApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
         stage.setTitle("ARX - API");
         stage.setScene(scene);
-        // stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
     }
 
