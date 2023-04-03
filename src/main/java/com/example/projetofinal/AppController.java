@@ -1,10 +1,10 @@
 package com.example.projetofinal;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -15,7 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class AppController {
     private final Data inputData = SetupController.inputData;
@@ -24,24 +24,33 @@ public class AppController {
     @FXML
     private VBox homeContent;
     @FXML
-    private TextField kValue, kStep;
+    private TextField kMin, kStep, kMax;
+    @FXML
+    private Button minimizeBtn, closeBtn, maximizeBtn;
+    @FXML
+    private TableView<String> inputTable;
 
-    private double xOffset = 0;
-    private double yOffset = 0;
+    private double xOffset = 0, yOffset = 0;
+
+    private ArrayList<String> statistics;
+
+    private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
 
     public void initialize() {
         // Only allow numbers to be typed in the kValue and kStep text fields
-        kValue.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                kValue.setText(newValue.replaceAll("\\D", ""));
-            }
-        });
-        kStep.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                kStep.setText(newValue.replaceAll("\\D", ""));
-            }
-        });
+        kStep.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
+        kMin.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
+        kMax.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
+
+        // Header Configuration
         makeStageDraggable();
+        closeBtn.setOnMouseClicked(SetupController::onCloseButtonClick);
+        minimizeBtn.setOnMouseClicked(SetupController::onMinimizeButtonClick);
+        maximizeBtn.setOnMouseClicked(SetupController::onMaximizeButtonClick);
+
+        // Insert the header in the statistics array
+        String header = makeHeader();
+        statistics.add(header);
     }
 
     @FXML
@@ -69,58 +78,42 @@ public class AppController {
         });
     }
 
-    public void viewModifications(MouseEvent event) {
+    public void viewModifications() {
         mainPage.setCenter(homeContent);
     }
 
-    public void loadPage(String pageName) {
-        Parent root = null;
-        try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(pageName)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mainPage.setCenter(root);
-    }
-
-    public void calculateKAnonymity(MouseEvent event) {
-        int k = Integer.parseInt(kValue.getText());
+    // Function to calculate the K-Anonymity given the values of kMin, kMax and kStep
+    public void calculateKAnonymity() throws IOException {
+        int minimumK = Integer.parseInt(kMin.getText());
+        int maximumK = Integer.parseInt(kMax.getText());
         int step = Integer.parseInt(kStep.getText());
-        for (int index = step; index <= k; index += step) {
-            try {
-                DataHandle anonimizedData = anonimizeWithK(inputData, index);
-                System.out.println(anonimizedData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        for (int k = minimumK; k <= maximumK; k += step) {
+            DataHandle anonimizedData = anonymizeWithK(inputData, k);
+            StatisticsAnonimizedData stats = new StatisticsAnonimizedData(anonimizedData);
+            statistics.add(stats.toString());
         }
+        saveCSV(statistics, "src/main/resources/statistics.csv");
     }
 
 
     // Function to anonymize data using K-Anonymity
-    public DataHandle anonimizeWithK(Data dados, int valorK) throws IOException {
-        ARXAnonymizer anonimizer = new ARXAnonymizer();
+    public DataHandle anonymizeWithK(Data dados, int valorK) throws IOException {
+        ARXAnonymizer anonymizer = new ARXAnonymizer();
         ARXConfiguration configuration = ARXConfiguration.create();
         configuration.addPrivacyModel(new KAnonymity(valorK));
         configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
-        ARXResult result = anonimizer.anonymize(dados, configuration);
+        ARXResult result = anonymizer.anonymize(dados, configuration);
         return result.getOutput();
     }
 
-    // Functions that given the data and the k fold used, it will make the statistics and save it in a CSV file
-    public void saveStatistics(DataHandle[] data, int k, int step) {
-        int sizeOfstatistics = k/step;
-        String[] statistics = new String[sizeOfstatistics];
-        statistics[0] = "k;precision;recall;specificity;f1"; // Header of the CSV file
-        for (int index = 1; index <= k; index += step) {
-            StatisticsAnonimizedData statisticsAnonimizedData = new StatisticsAnonimizedData(data[index]);
-            statistics[index] = statisticsAnonimizedData.toString();
-        }
-        saveCSV(statistics, "statistics.csv");
+    // Function to create the header of the CSV file
+    public String makeHeader() {
+        return "k;" + "gen. intensity;missings;entropy;squared error; ;".repeat(Math.max(0, NUMERO_DE_QUASE_IDENTIFICADORES)) +
+                "discernibility;avg. class size;row squared error;prosecutor risk;journalist risk;marketer risk";
     }
 
     // Function that given a bidimensional array of strings, save in a CSV file
-    public void saveCSV(String[] data, String path) {
+    public void saveCSV(ArrayList<String> data, String path) {
         File file = new File(path);
         try {
             FileWriter fw = new FileWriter(file);
@@ -136,5 +129,9 @@ public class AppController {
         } catch (IOException e) {
             System.out.println("Erro ao salvar arquivo CSV");
         }
+    }
+
+    public void setDataTable() {
+        // TODO: Implementar
     }
 }

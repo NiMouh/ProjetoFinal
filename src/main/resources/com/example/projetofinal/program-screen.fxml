@@ -4,8 +4,11 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -67,38 +70,47 @@
       </VBox>
    </left>
    <center>
-      <VBox fx:id="homeContent" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #29273D;"
-            BorderPane.alignment="CENTER">
+      <VBox fx:id="homeContent" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #29273D;" BorderPane.alignment="CENTER">
          <padding>
-            <Insets left="30.0" right="30.0" top="30.0"/>
+            <Insets left="30.0" right="30.0" top="30.0" />
          </padding>
-         <Label text="Input Data" textFill="WHITE">
+         <Label text="Dados Inseridos" textFill="WHITE">
             <font>
-               <Font name="Segoe UI Semibold" size="25.0"/>
+               <Font name="Segoe UI Semibold" size="25.0" />
             </font>
             <VBox.margin>
-               <Insets bottom="10.0"/>
+               <Insets bottom="10.0" />
             </VBox.margin>
          </Label>
-         <ScrollPane prefHeight="200.0" prefWidth="200.0">
-            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="197.0" prefWidth="701.0"
-                        style="-fx-background-color: #343248;"/>
+         <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
+            <content>
+               <TableView fx:id="inputTable" style="-fx-background-color: #232132;">
+                 <columns>
+                   <TableColumn minWidth="-Infinity" prefWidth="75.0" text="C1" />
+                   <TableColumn prefWidth="75.0" text="C2" />
+                 </columns>
+               </TableView>
+            </content>
          </ScrollPane>
          <HBox alignment="BOTTOM_CENTER" prefHeight="80.0" prefWidth="704.0">
             <VBox.margin>
-               <Insets bottom="20.0"/>
+               <Insets bottom="20.0" />
             </VBox.margin>
-            <TextField fx:id="kValue" promptText="K-Limit Value" style="-fx-background-color: #343248;">
+            <TextField fx:id="kMin" promptText="Valor Mínimo de K" style="-fx-background-color: #343248;">
                <HBox.margin>
-                  <Insets right="10.0"/>
+                  <Insets right="10.0" />
                </HBox.margin>
             </TextField>
-            <TextField fx:id="kStep" promptText="K-Step" style="-fx-background-color: #343248;"/>
+            <TextField fx:id="kMax" promptText="Valor Máximo de K" style="-fx-background-color: #343248;">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </TextField>
+            <TextField fx:id="kStep" promptText="Valor do intervalo de Ks" style="-fx-background-color: #343248;" />
          </HBox>
-         <Button mnemonicParsing="false" onMouseClicked="#calculateKAnonymity" prefHeight="43.0" prefWidth="115.0"
-                 style="-fx-background-color: #6794B5; -fx-background-radius: 5px;" text="Anonimizar" textFill="WHITE">
+         <Button mnemonicParsing="false" onMouseClicked="#calculateKAnonymity" prefHeight="43.0" prefWidth="115.0" style="-fx-background-color: #6794B5; -fx-background-radius: 5px;" text="Anonimizar" textFill="WHITE">
             <font>
-               <Font size="16.0"/>
+               <Font size="16.0" />
             </font>
          </Button>
       </VBox>
@@ -107,26 +119,46 @@
       <BorderPane prefHeight="45.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
          <right>
             <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="217.0" BorderPane.alignment="CENTER">
-               <Button mnemonicParsing="false" style="-fx-background-color: none;" text="MINIMIZAR" textFill="WHITE">
+               <Button fx:id="minimizeBtn" mnemonicParsing="false" style="-fx-background-color: none;" textFill="WHITE">
                   <HBox.margin>
                      <Insets right="5.0" />
                   </HBox.margin>
+                  <graphic>
+                     <ImageView fitHeight="10.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/min-btn.png" />
+                     </ImageView>
+                  </graphic>
                </Button>
-               <Button mnemonicParsing="false" style="-fx-background-color: none;" text="MAXIMIZAR" textFill="WHITE">
+               <Button fx:id="maximizeBtn" alignment="BOTTOM_LEFT" mnemonicParsing="false" style="-fx-background-color: none;" textFill="WHITE">
                   <HBox.margin>
-                     <Insets right="5.0" />
+                     <Insets right="5.0" top="5.0" />
                   </HBox.margin>
+                  <graphic>
+                     <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/max-btn.png" />
+                     </ImageView>
+                  </graphic>
                </Button>
-               <Button mnemonicParsing="false" style="-fx-background-color: none;" text="SAIR" textFill="WHITE">
+               <Button fx:id="closeBtn" mnemonicParsing="false" style="-fx-background-color: none;" textFill="WHITE">
                   <HBox.margin>
                      <Insets />
                   </HBox.margin>
+                  <graphic>
+                     <ImageView fitHeight="10.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/exit-btn.png" />
+                     </ImageView>
+                  </graphic>
                </Button>
             </HBox>
          </right>
          <left>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <Button mnemonicParsing="false" style="-fx-background-color: none;" text="MENU" textFill="WHITE" />
+               <Button mnemonicParsing="false" style="-fx-background-color: none;" textFill="WHITE">
+                  <graphic>
+                     <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/menu-btn.png" />
+                     </ImageView>
+                  </graphic></Button>
             </HBox>
          </left>
          <padding>
