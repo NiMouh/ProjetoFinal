@@ -128,7 +128,6 @@ public class SetupController {
 
     // Function that imports the data from the file
     protected void importData(String filePath) {
-        System.out.println("Ficheiro a importar" + filePath);
         try {
             inputData = Data.create(filePath, Charset.defaultCharset(), ';');
         } catch (IOException e) {

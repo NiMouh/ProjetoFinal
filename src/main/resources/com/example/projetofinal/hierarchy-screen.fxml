@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #29273D;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projetofinal.HierarchyController">
+    <Label text="Hierarquias" textFill="WHITE">
+        <font>
+            <Font name="Segoe UI Semibold" size="25.0" />
+        </font>
+    </Label>
+   <HBox fx:id="hierarchyContainer" prefHeight="100.0" prefWidth="200.0" />
+</VBox>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -28,6 +28,9 @@
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </VBox>
          <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
@@ -38,6 +41,9 @@
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </VBox>
          <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
@@ -48,6 +54,9 @@
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </VBox>
          <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
@@ -58,19 +67,25 @@
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </VBox>
          <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
-            <Button mnemonicParsing="false" style="-fx-background-color: none;" text="EXPORTAR DADOS" textFill="WHITE">
+            <Button mnemonicParsing="false" onMouseClicked="#viewHieararchy" style="-fx-background-color: none;" text="IMPORTAR HIERARQUIAS" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </VBox>
       </VBox>
    </left>
    <center>
-      <VBox fx:id="homeContent" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #29273D;" BorderPane.alignment="CENTER">
+      <VBox fx:id="homeContent" alignment="TOP_CENTER" style="-fx-background-color: #29273D;" BorderPane.alignment="CENTER">
          <padding>
             <Insets left="30.0" right="30.0" top="30.0" />
          </padding>
@@ -83,35 +98,31 @@
             </VBox.margin>
          </Label>
          <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
-            <content>
-               <TableView fx:id="inputTable" style="-fx-background-color: #232132;">
-                 <columns>
-                   <TableColumn minWidth="-Infinity" prefWidth="75.0" text="C1" />
-                   <TableColumn prefWidth="75.0" text="C2" />
-                 </columns>
-               </TableView>
-            </content>
+            <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
          </ScrollPane>
          <HBox alignment="BOTTOM_CENTER" prefHeight="80.0" prefWidth="704.0">
             <VBox.margin>
                <Insets bottom="20.0" />
             </VBox.margin>
-            <TextField fx:id="kMin" promptText="Valor Mínimo de K" style="-fx-background-color: #343248;">
+            <TextField fx:id="kMin" promptText="Valor Mínimo de K" style="-fx-background-color: #343248; -fx-text-fill: white;">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </TextField>
-            <TextField fx:id="kMax" promptText="Valor Máximo de K" style="-fx-background-color: #343248;">
+            <TextField fx:id="kMax" promptText="Valor Máximo de K" style="-fx-background-color: #343248; -fx-text-fill: white;">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </TextField>
-            <TextField fx:id="kStep" promptText="Valor do intervalo de Ks" style="-fx-background-color: #343248;" />
+            <TextField fx:id="kStep" promptText="Valor do intervalo de Ks" style="-fx-background-color: #343248; -fx-text-fill: white;" />
          </HBox>
          <Button mnemonicParsing="false" onMouseClicked="#calculateKAnonymity" prefHeight="43.0" prefWidth="115.0" style="-fx-background-color: #6794B5; -fx-background-radius: 5px;" text="Anonimizar" textFill="WHITE">
             <font>
                <Font size="16.0" />
             </font>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
          </Button>
       </VBox>
    </center>
@@ -128,6 +139,9 @@
                         <Image url="@img/min-btn.png" />
                      </ImageView>
                   </graphic>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
                </Button>
                <Button fx:id="maximizeBtn" alignment="BOTTOM_LEFT" mnemonicParsing="false" style="-fx-background-color: none;" textFill="WHITE">
                   <HBox.margin>
@@ -138,6 +152,9 @@
                         <Image url="@img/max-btn.png" />
                      </ImageView>
                   </graphic>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
                </Button>
                <Button fx:id="closeBtn" mnemonicParsing="false" style="-fx-background-color: none;" textFill="WHITE">
                   <HBox.margin>
@@ -148,6 +165,9 @@
                         <Image url="@img/exit-btn.png" />
                      </ImageView>
                   </graphic>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
                </Button>
             </HBox>
          </right>
@@ -158,7 +178,10 @@
                      <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="@img/menu-btn.png" />
                      </ImageView>
-                  </graphic></Button>
+                  </graphic>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor></Button>
             </HBox>
          </left>
          <padding>

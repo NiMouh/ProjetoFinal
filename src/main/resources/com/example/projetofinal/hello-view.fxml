@@ -16,7 +16,7 @@
             <Button fx:id="minimizeBtn" mnemonicParsing="false" style="-fx-background-color: #343248;" textFill="WHITE">
             <graphic>
                 <ImageView fitHeight="10.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@img/min-btn.png"/>
+                    <Image url="@img/min-btn.png" />
                 </ImageView>
             </graphic>
             <HBox.margin>
@@ -25,7 +25,7 @@
             <Button fx:id="maximizeBtn" mnemonicParsing="false" style="-fx-background-color: #343248;" textFill="WHITE">
             <graphic>
                 <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@img/max-btn.png"/>
+                    <Image url="@img/max-btn.png" />
                 </ImageView>
             </graphic>
             <HBox.margin>
@@ -34,7 +34,7 @@
             <Button fx:id="closeBtn" mnemonicParsing="false" style="-fx-background-color: #343248;" textFill="WHITE">
             <graphic>
                 <ImageView fitHeight="10.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@img/exit-btn.png"/>
+                    <Image url="@img/exit-btn.png" />
                 </ImageView>
             </graphic></Button>
         </HBox>

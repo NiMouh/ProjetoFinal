@@ -1,24 +1,31 @@
 package com.example.projetofinal;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.deidentifier.arx.*;
 import org.deidentifier.arx.criteria.KAnonymity;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AppController {
-    private final Data inputData = SetupController.inputData;
+    public Data inputData = SetupController.inputData;
     @FXML
     private BorderPane mainPage;
     @FXML
@@ -28,11 +35,11 @@ public class AppController {
     @FXML
     private Button minimizeBtn, closeBtn, maximizeBtn;
     @FXML
-    private TableView<String> inputTable;
+    private TableView<String[]> inputTable;
 
     private double xOffset = 0, yOffset = 0;
 
-    private ArrayList<String> statistics;
+    private ArrayList<String> statistics = new ArrayList<>();
 
     private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
 
@@ -47,6 +54,10 @@ public class AppController {
         closeBtn.setOnMouseClicked(SetupController::onCloseButtonClick);
         minimizeBtn.setOnMouseClicked(SetupController::onMinimizeButtonClick);
         maximizeBtn.setOnMouseClicked(SetupController::onMaximizeButtonClick);
+
+        // Table Configuration
+        inputTable.setEditable(true);
+        setDataTable();
 
         // Insert the header in the statistics array
         String header = makeHeader();
@@ -82,8 +93,21 @@ public class AppController {
         mainPage.setCenter(homeContent);
     }
 
+    public void viewHieararchy() {
+        loadPage("hierarchy-screen");
+    }
+
+    public void loadPage(String page) {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(page + ".fxml")));
+            mainPage.setCenter(root);
+        } catch (IOException e) {
+            System.out.println("Não foi possível carregar a página " + page);
+        }
+    }
+
     // Function to calculate the K-Anonymity given the values of kMin, kMax and kStep
-    public void calculateKAnonymity() throws IOException {
+    public void calculateKAnonymity() {
         int minimumK = Integer.parseInt(kMin.getText());
         int maximumK = Integer.parseInt(kMax.getText());
         int step = Integer.parseInt(kStep.getText());
@@ -97,13 +121,18 @@ public class AppController {
 
 
     // Function to anonymize data using K-Anonymity
-    public DataHandle anonymizeWithK(Data dados, int valorK) throws IOException {
-        ARXAnonymizer anonymizer = new ARXAnonymizer();
-        ARXConfiguration configuration = ARXConfiguration.create();
-        configuration.addPrivacyModel(new KAnonymity(valorK));
-        configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
-        ARXResult result = anonymizer.anonymize(dados, configuration);
-        return result.getOutput();
+    public DataHandle anonymizeWithK(Data dados, int valorK) {
+        try{
+            ARXAnonymizer anonymizer = new ARXAnonymizer();
+            ARXConfiguration configuration = ARXConfiguration.create();
+            configuration.addPrivacyModel(new KAnonymity(valorK));
+            configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
+            ARXResult result = anonymizer.anonymize(dados, configuration);
+            return result.getOutput();
+        }catch (IOException e){
+            System.out.println("Erro ao anonimizar os dados");
+        }
+        return null;
     }
 
     // Function to create the header of the CSV file
@@ -131,7 +160,60 @@ public class AppController {
         }
     }
 
+    // Function that given a CSV file, creates the columns and the rows of a table
     public void setDataTable() {
-        // TODO: Implementar
+
+        try {
+            Reader reader = Files.newBufferedReader(Paths.get("data.csv"));
+            CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
+            CSVReader csvReader = new CSVReaderBuilder(reader).withCSVParser(parser).build();
+
+            ObservableList<String[]> data = FXCollections.observableArrayList();
+            String[] nextLine;
+            while ((nextLine = csvReader.readNext()) != null) {
+                data.add(nextLine);
+            }
+
+            // Clear existing columns
+            inputTable.getColumns().clear();
+
+            String[] columnNames = data.get(0);
+            for (int index = 1; index < columnNames.length; index++) {
+                TableColumn<String[], String> column = new TableColumn<>(columnNames[index]);
+                final int columnIndex = index;
+                column.setCellValueFactory(cellData -> {
+                    String[] row = cellData.getValue();
+                    return new SimpleStringProperty(row[columnIndex]);
+                });
+                column.setCellFactory(tableColumn -> { // Change variable name to 'tableColumn'
+                    return new TableCell<>() {
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setText(null);
+                                setStyle("");
+                            } else {
+                                int rowIndex = getIndex();
+                                if (rowIndex % 2 == 0) {
+                                    setStyle("-fx-background-color: #232132; -fx-text-fill: #FFFFFF;");
+                                } else {
+                                    setStyle("-fx-background-color: #2C2B3F; -fx-text-fill: #FFFFFF;");
+                                }
+                                setText(item);
+                            }
+                        }
+                    };
+                });
+                column.setStyle("-fx-background-color: #FFFFFF;");
+                inputTable.getColumns().add(column);
+            }
+
+
+            // Set the items property of the TableView to an ObservableList of the data from the CSV file
+            inputTable.setItems(data);
+        } catch (CsvValidationException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
