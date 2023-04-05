@@ -97,6 +97,10 @@ public class AppController {
         loadPage("hierarchy-screen");
     }
 
+    public void viewStatistics() {
+        loadPage("statistics-screen");
+    }
+
     public void loadPage(String page) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(page + ".fxml")));
@@ -114,9 +118,14 @@ public class AppController {
         for (int k = minimumK; k <= maximumK; k += step) {
             DataHandle anonimizedData = anonymizeWithK(inputData, k);
             StatisticsAnonimizedData stats = new StatisticsAnonimizedData(anonimizedData);
+            try{
+                anonimizedData.save("data_anonymity_"+ k +".csv", ';');
+            }catch (IOException e){
+                System.out.println("Erro ao salvar os dados anonimizados");
+            }
             statistics.add(stats.toString());
         }
-        saveCSV(statistics, "src/main/resources/statistics.csv");
+        saveCSV(statistics, "statistics.csv");
     }
 
 

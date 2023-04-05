@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #343248;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projetofinal.AppController">
+<BorderPane fx:id="mainPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #343248;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projetofinal.AppController">
    <left>
       <VBox prefHeight="557.0" prefWidth="236.0" style="-fx-background-color: #343248;" BorderPane.alignment="CENTER">
          <padding>
@@ -50,7 +50,7 @@
             <VBox.margin>
                <Insets bottom="15.0" />
             </VBox.margin>
-            <Button mnemonicParsing="false" style="-fx-background-color: none;" text="VISUALIZAR ESTATÍSTICAS" textFill="WHITE">
+            <Button mnemonicParsing="false" onMouseClicked="#viewStatistics" style="-fx-background-color: none;" text="VISUALIZAR ESTATÍSTICAS" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -84,48 +84,6 @@
          </VBox>
       </VBox>
    </left>
-   <center>
-      <VBox fx:id="homeContent" alignment="TOP_CENTER" style="-fx-background-color: #29273D;" BorderPane.alignment="CENTER">
-         <padding>
-            <Insets left="30.0" right="30.0" top="30.0" />
-         </padding>
-         <Label text="Dados Inseridos" textFill="WHITE">
-            <font>
-               <Font name="Segoe UI Semibold" size="25.0" />
-            </font>
-            <VBox.margin>
-               <Insets bottom="10.0" />
-            </VBox.margin>
-         </Label>
-         <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
-            <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
-         </ScrollPane>
-         <HBox alignment="BOTTOM_CENTER" prefHeight="80.0" prefWidth="704.0">
-            <VBox.margin>
-               <Insets bottom="20.0" />
-            </VBox.margin>
-            <TextField fx:id="kMin" promptText="Valor Mínimo de K" style="-fx-background-color: #343248; -fx-text-fill: white;">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </TextField>
-            <TextField fx:id="kMax" promptText="Valor Máximo de K" style="-fx-background-color: #343248; -fx-text-fill: white;">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </TextField>
-            <TextField fx:id="kStep" promptText="Valor do intervalo de Ks" style="-fx-background-color: #343248; -fx-text-fill: white;" />
-         </HBox>
-         <Button mnemonicParsing="false" onMouseClicked="#calculateKAnonymity" prefHeight="43.0" prefWidth="115.0" style="-fx-background-color: #6794B5; -fx-background-radius: 5px;" text="Anonimizar" textFill="WHITE">
-            <font>
-               <Font size="16.0" />
-            </font>
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-         </Button>
-      </VBox>
-   </center>
    <top>
       <BorderPane prefHeight="45.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
          <right>
@@ -189,4 +147,46 @@
          </padding>
       </BorderPane>
    </top>
+   <center>
+      <VBox fx:id="homeContent" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #29273D;" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets left="30.0" right="30.0" top="30.0" />
+         </padding>
+         <Label text="Dados Inseridos" textFill="WHITE">
+            <font>
+               <Font name="Segoe UI Semibold" size="25.0" />
+            </font>
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin>
+         </Label>
+         <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
+            <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
+         </ScrollPane>
+         <HBox alignment="BOTTOM_CENTER" prefHeight="80.0" prefWidth="704.0">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin>
+            <TextField fx:id="kMin" promptText="Valor Mínimo de K" style="-fx-background-color: #343248; -fx-text-fill: white;">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </TextField>
+            <TextField fx:id="kMax" promptText="Valor Máximo de K" style="-fx-background-color: #343248; -fx-text-fill: white;">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </TextField>
+            <TextField fx:id="kStep" promptText="Valor do intervalo de Ks" style="-fx-background-color: #343248; -fx-text-fill: white;" />
+         </HBox>
+         <Button mnemonicParsing="false" onMouseClicked="#calculateKAnonymity" prefHeight="43.0" prefWidth="115.0" style="-fx-background-color: #6794B5; -fx-background-radius: 5px;" text="Anonimizar" textFill="WHITE">
+            <font>
+               <Font size="16.0" />
+            </font>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </Button>
+      </VBox>
+   </center>
 </BorderPane>

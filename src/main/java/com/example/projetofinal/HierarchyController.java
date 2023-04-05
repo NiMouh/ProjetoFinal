@@ -32,8 +32,12 @@ public class HierarchyController {
         for (int index = 0; index < attributes.size(); index++) {
             String attribute = (String) attributes.toArray()[index];
             VBox column = new VBox();
-            column.getChildren().add(new Label(attribute));
+            column.setStyle("-fx-alignment: center; -fx-padding: 10px;");
+            Label attributeLabel = new Label(attribute);
+            attributeLabel.setStyle("-fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;-fx-alignment: center;");
+            column.getChildren().add(attributeLabel);
             Button importHierarchy = new Button("Importar Hierarquia");
+            importHierarchy.setStyle("-fx-text-fill: white; -fx-background-color: #6794B5;-fx-padding: 5px 10px 5px 10px");
             final int hierarchyIndex = index;
             importHierarchy.setOnMouseClicked(e -> importHierarchy(inputData, hierarchyIndex));
             column.getChildren().add(importHierarchy);
