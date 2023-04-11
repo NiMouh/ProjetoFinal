@@ -101,6 +101,7 @@ public class AppController {
         loadPage("statistics-screen");
     }
 
+    // Function that given a page name, loads the page section
     public void loadPage(String page) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(page + ".fxml")));
@@ -118,9 +119,9 @@ public class AppController {
         for (int k = minimumK; k <= maximumK; k += step) {
             DataHandle anonimizedData = anonymizeWithK(inputData, k);
             StatisticsAnonimizedData stats = new StatisticsAnonimizedData(anonimizedData);
-            try{
-                anonimizedData.save("data_anonymity_"+ k +".csv", ';');
-            }catch (IOException e){
+            try {
+                anonimizedData.save("data_anonymity_" + k + ".csv", ';');
+            } catch (IOException e) {
                 System.out.println("Erro ao salvar os dados anonimizados");
             }
             statistics.add(stats.toString());
@@ -131,14 +132,14 @@ public class AppController {
 
     // Function to anonymize data using K-Anonymity
     public DataHandle anonymizeWithK(Data dados, int valorK) {
-        try{
+        try {
             ARXAnonymizer anonymizer = new ARXAnonymizer();
             ARXConfiguration configuration = ARXConfiguration.create();
             configuration.addPrivacyModel(new KAnonymity(valorK));
             configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
             ARXResult result = anonymizer.anonymize(dados, configuration);
             return result.getOutput();
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Erro ao anonimizar os dados");
         }
         return null;
@@ -187,32 +188,30 @@ public class AppController {
             inputTable.getColumns().clear();
 
             String[] columnNames = data.get(0);
-            for (int index = 1; index < columnNames.length; index++) {
+            for (int index = 0; index < columnNames.length; index++) {
                 TableColumn<String[], String> column = new TableColumn<>(columnNames[index]);
                 final int columnIndex = index;
                 column.setCellValueFactory(cellData -> {
                     String[] row = cellData.getValue();
                     return new SimpleStringProperty(row[columnIndex]);
                 });
-                column.setCellFactory(tableColumn -> { // Change variable name to 'tableColumn'
-                    return new TableCell<>() {
-                        @Override
-                        protected void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (item == null || empty) {
-                                setText(null);
-                                setStyle("");
+                column.setCellFactory(tableColumn -> new TableCell<>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                            setStyle("");
+                        } else {
+                            int rowIndex = getIndex();
+                            if (rowIndex % 2 == 0) {
+                                setStyle("-fx-background-color: #232132; -fx-text-fill: #FFFFFF;");
                             } else {
-                                int rowIndex = getIndex();
-                                if (rowIndex % 2 == 0) {
-                                    setStyle("-fx-background-color: #232132; -fx-text-fill: #FFFFFF;");
-                                } else {
-                                    setStyle("-fx-background-color: #2C2B3F; -fx-text-fill: #FFFFFF;");
-                                }
-                                setText(item);
+                                setStyle("-fx-background-color: #2C2B3F; -fx-text-fill: #FFFFFF;");
                             }
+                            setText(item);
                         }
-                    };
+                    }
                 });
                 column.setStyle("-fx-background-color: #FFFFFF;");
                 inputTable.getColumns().add(column);

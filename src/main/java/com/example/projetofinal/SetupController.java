@@ -171,7 +171,6 @@ public class SetupController {
         return button;
     }
 
-
     // Function that defines the data types
     protected void defineDataTypes() {
         int numeroColunas = inputData.getHandle().getNumColumns();
@@ -180,15 +179,15 @@ public class SetupController {
                 System.out.println("Erro");
                 return;
             }
-            if (setupButtons[indexColuna][0].isSelected()){
+            if (setupButtons[indexColuna][0].isSelected()) {
                 inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.STRING);
-            }else if (setupButtons[indexColuna][1].isSelected()){
+            } else if (setupButtons[indexColuna][1].isSelected()) {
                 inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.INTEGER);
-            }else if (setupButtons[indexColuna][2].isSelected()){
+            } else if (setupButtons[indexColuna][2].isSelected()) {
                 inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.ORDERED_STRING);
-            }else if (setupButtons[indexColuna][3].isSelected()){
+            } else if (setupButtons[indexColuna][3].isSelected()) {
                 inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.DATE);
-            }else if (setupButtons[indexColuna][4].isSelected()){
+            } else if (setupButtons[indexColuna][4].isSelected()) {
                 inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.DECIMAL);
             }
         }

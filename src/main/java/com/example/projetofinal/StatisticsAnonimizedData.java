@@ -62,7 +62,7 @@ public class StatisticsAnonimizedData {
         return prosecutorRisk + ";" + journalistRisk + ";" + marketerRisk;
     }
 
-    public String toString(){
+    public String toString() {
         return getSupressedData() + ";" + getQualityAttributes() + getQualityRecords() + getRiskMeasures();
     }
 

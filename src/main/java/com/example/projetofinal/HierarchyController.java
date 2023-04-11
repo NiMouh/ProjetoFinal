@@ -45,6 +45,7 @@ public class HierarchyController {
         }
     }
 
+    // Function that imports a hierarchy from a file given a column index for an attribute
     public void importHierarchy(Data data, int indexColumn) {
         try {
             File fileName = fileChooser.showOpenDialog(new Stage());
