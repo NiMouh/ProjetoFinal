@@ -20,7 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 
-public class StatisticsController {
+public class RiskController {
 
     @FXML
     private TableView<String[]> inputTable;
@@ -34,7 +34,7 @@ public class StatisticsController {
     final FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
-        ObservableList<String[]> data = readCSV("statistics.csv");
+        ObservableList<String[]> data = readCSV("risks.csv");
 
         if (data == null) { // If it's null, it will hide the table and show a message
             tableBox.setVisible(false);
@@ -42,7 +42,7 @@ public class StatisticsController {
         } else { // If it's not null, it will show the table and show the statistics
             tableBox.setVisible(true);
             messageBox.setVisible(false);
-            statisticsWindow(data);
+            risksWindow(data);
         }
 
         searchStats.setOnAction(event -> {
@@ -51,13 +51,13 @@ public class StatisticsController {
                 tableBox.setVisible(true);
                 messageBox.setVisible(false);
                 ObservableList<String[]> searched = readCSV(file.getAbsolutePath());
-                statisticsWindow(searched);
+                risksWindow(searched);
             }
         });
     }
 
-    // Shows the statistics UI
-    public void statisticsWindow(ObservableList<String[]> data) {
+    // Shows the risks UI
+    public void risksWindow(ObservableList<String[]> data) {
         if (data == null) {
             return;
         }
@@ -99,7 +99,7 @@ public class StatisticsController {
         inputTable.setItems(data);
     }
 
-    // Reads the CSV file and returns the data
+    // Reads a CSV file and returns the data as an ObservableList
     public ObservableList<String[]> readCSV(String path) {
         ObservableList<String[]> data = FXCollections.observableArrayList();
         try {
@@ -113,13 +113,13 @@ public class StatisticsController {
             }
         } catch (NoSuchFileException e) {
             // Handle the exception gracefully, for example by displaying a message to the user
-            System.err.println("Ficheiro não encontrado: " + path);
+            System.err.println("File not found: " + path);
         } catch (IOException e) {
             // Handle any other IO exceptions in a similar way
-            System.err.println("Ocorreu um erro ao ler o ficheiro: " + e.getMessage());
+            System.err.println("An IO exception occurred while reading the file: " + e.getMessage());
         } catch (Exception e) {
             // Catch any other unexpected exceptions
-            System.err.println("Ocorreu um erro inesperado: " + e.getMessage());
+            System.err.println("An unexpected exception occurred: " + e.getMessage());
         }
         return data;
     }

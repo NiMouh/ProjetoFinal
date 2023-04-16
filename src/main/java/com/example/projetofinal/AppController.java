@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class AppController {
-    public Data inputData = SetupController.inputData;
+    public static Data inputData = SetupController.getData();
     @FXML
     private BorderPane mainPage;
     @FXML
@@ -40,6 +40,7 @@ public class AppController {
     private double xOffset = 0, yOffset = 0;
 
     private ArrayList<String> statistics = new ArrayList<>();
+    private ArrayList<String> risks = new ArrayList<>();
 
     private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
 
@@ -60,8 +61,12 @@ public class AppController {
         setDataTable();
 
         // Insert the header in the statistics array
-        String header = makeHeader();
-        statistics.add(header);
+        String statsHeader = makeStatisticHeader();
+        statistics.add(statsHeader);
+
+        // Insert the header in the risk array
+        String riskHeader = makeRiskHeader();
+        risks.add(riskHeader);
     }
 
     @FXML
@@ -101,6 +106,10 @@ public class AppController {
         loadPage("statistics-screen");
     }
 
+    public void viewRisks() {
+        loadPage("risks-screen");
+    }
+
     // Function that given a page name, loads the page section
     public void loadPage(String page) {
         try {
@@ -117,38 +126,45 @@ public class AppController {
         int maximumK = Integer.parseInt(kMax.getText());
         int step = Integer.parseInt(kStep.getText());
         for (int k = minimumK; k <= maximumK; k += step) {
-            DataHandle anonimizedData = anonymizeWithK(inputData, k);
-            StatisticsAnonimizedData stats = new StatisticsAnonimizedData(anonimizedData);
-            try {
-                anonimizedData.save("data_anonymity_" + k + ".csv", ';');
-            } catch (IOException e) {
-                System.out.println("Erro ao salvar os dados anonimizados");
-            }
-            statistics.add(stats.toString());
+            anonymizeWithK(inputData, k);
         }
+        // Save the statistics and risks in CSV files
         saveCSV(statistics, "statistics.csv");
+        saveCSV(risks, "risks.csv");
+
+        // Clear the statistics and risks arrays
+        statistics.clear();
+        risks.clear();
     }
 
 
     // Function to anonymize data using K-Anonymity
-    public DataHandle anonymizeWithK(Data dados, int valorK) {
+    public void anonymizeWithK(Data dados, int valorK) {
+        ARXAnonymizer anonymizer = new ARXAnonymizer();
+        ARXConfiguration configuration = ARXConfiguration.create();
+        configuration.addPrivacyModel(new KAnonymity(valorK));
+        configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
         try {
-            ARXAnonymizer anonymizer = new ARXAnonymizer();
-            ARXConfiguration configuration = ARXConfiguration.create();
-            configuration.addPrivacyModel(new KAnonymity(valorK));
-            configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
             ARXResult result = anonymizer.anonymize(dados, configuration);
-            return result.getOutput();
+            result.getOutput(false).save("data_anonymity_" + valorK + ".csv", ';'); // Save the anonymized data in a CSV file
+            StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false));
+            statistics.add(reviewData.getFullStatistics()); // Save the statistics in the statistics array
+            risks.add(reviewData.getRiskMeasures()); // Save the risks in the risks array
         } catch (IOException e) {
             System.out.println("Erro ao anonimizar os dados");
         }
-        return null;
+        System.out.println("Dados Anonimizados com sucesso");
     }
 
-    // Function to create the header of the CSV file
-    public String makeHeader() {
-        return "k;" + "gen. intensity;missings;entropy;squared error; ;".repeat(Math.max(0, NUMERO_DE_QUASE_IDENTIFICADORES)) +
-                "discernibility;avg. class size;row squared error;prosecutor risk;journalist risk;marketer risk";
+    // Function to create the header of the CSV file (statistics.csv)
+    public String makeStatisticHeader() {
+        return "k;supressed" + "gen. intensity;missings;entropy;squared error; ;".repeat(Math.max(0, NUMERO_DE_QUASE_IDENTIFICADORES)) +
+                "discernibility;avg. class size;row squared error";
+    }
+
+    // Function to create the header of the CSV file (risk.csv)
+    public String makeRiskHeader() {
+        return "k;prosecutor risk;journalist risk;journalist risk";
     }
 
     // Function that given a bidimensional array of strings, save in a CSV file
@@ -164,7 +180,7 @@ public class AppController {
             }
 
             bw.close();
-            System.out.println("Data saved to CSV successfully.");
+            System.out.println("Os dados foram salvos com sucesso");
         } catch (IOException e) {
             System.out.println("Erro ao salvar arquivo CSV");
         }

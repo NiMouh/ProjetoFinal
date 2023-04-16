@@ -57,12 +57,13 @@ public class SetupController {
                     importData(file.getAbsolutePath());
                     dataTypeWindow();
                 }
-            } else if (setupButton.getText().equals("CONTINUE")) { // Defining data types
+            } else if (setupButton.getText().equals("CONTINUAR")) { // Defining data types
                 defineDataTypes();
                 attributeTypeWindow();
 
-            } else if (setupButton.getText().equals("ACCEPT")) { // Defining attribute types
+            } else if (setupButton.getText().equals("ACEITAR")) { // Defining attribute types
                 defineAttributeTypes();
+                SetupController.setData(inputData);
                 try {
                     newWindow(event);
                 } catch (IOException e) {
@@ -131,14 +132,14 @@ public class SetupController {
         try {
             inputData = Data.create(filePath, Charset.defaultCharset(), ';');
         } catch (IOException e) {
-            System.out.println("Error importing data");
+            System.out.println("Erro ao importar os dados");
         }
     }
 
     // Function that defines the data types
     protected void dataTypeWindow() {
-        setupTitle.setText("Data Type");
-        setupButton.setText("CONTINUE");
+        setupTitle.setText("Tipo de Dados");
+        setupButton.setText("CONTINUAR");
         int numeroColunas = inputData.getHandle().getNumColumns();
         setupButtons = new RadioButton[numeroColunas][NUMERO_TIPOS];
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
@@ -195,8 +196,8 @@ public class SetupController {
 
     // Function that opens the window to define the attribute types
     protected void attributeTypeWindow() {
-        setupTitle.setText("Attribute Type");
-        setupButton.setText("ACCEPT");
+        setupTitle.setText("Tipo de Atributo");
+        setupButton.setText("ACEITAR");
         IntStream.range(0, inputData.getHandle().getNumColumns()).forEach(indexColuna -> IntStream.range(0, NUMERO_TIPOS).forEach(indexTipo -> {
             setupButtons[indexColuna][indexTipo].setSelected(false);
             setupButtons[indexColuna][indexTipo].setText(attributeTypes[indexTipo]);
@@ -229,5 +230,12 @@ public class SetupController {
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("program-screen.fxml"))));
         stage.setScene(scene);
+    }
+
+    public static Data getData() {
+        return inputData;
+    }
+    public static void setData(Data data) {
+        inputData = data;
     }
 }

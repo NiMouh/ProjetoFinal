@@ -49,7 +49,7 @@ public class StatisticsAnonimizedData {
         QualityMeasureRowOriented averageClassSize = statisticsBuilder.getQualityStatistics().getAverageClassSize();
         QualityMeasureRowOriented squaredError = statisticsBuilder.getQualityStatistics().getRecordLevelSquaredError();
 
-        return discernibility + ";" + averageClassSize + ";" + squaredError + ";";
+        return discernibility.getValue() + ";" + averageClassSize.getValue() + ";" + squaredError.getValue() + ";";
     }
 
     // Function that returns a String with the risk measures
@@ -62,9 +62,9 @@ public class StatisticsAnonimizedData {
         return prosecutorRisk + ";" + journalistRisk + ";" + marketerRisk;
     }
 
-    public String toString() {
-        return getSupressedData() + ";" + getQualityAttributes() + getQualityRecords() + getRiskMeasures();
+    // Function that returns a String with all the statistics
+    public String getFullStatistics() {
+        return getSupressedData() + ";" + getQualityAttributes() + getQualityRecords();
     }
-
 
 }
