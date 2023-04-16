@@ -1,5 +1,27 @@
 # Apontamentos para o projeto final de curso
 
+## Introdução
+
+### Âmbito, Enquadramento e Motivação
+
+Este documento funciona como relatório do projeto final de curso de Engenharia Informática. O projeto visa aplicar e consolidar os conhecimentos
+adquiridos ao longo do percurso académico, através da criação de uma aplicação que facilita o processo de anonimização de dados, usando a ferramenta
+ARX. Todo o desenvolvimento da mesma é feita na linguagem Java. De modo complementar, é esperado que este projeto aguçe a capacidade de análise de
+problemas na resolução de problemas de segurança e preservação de dados.
+
+### Problema e Objetivos do Trabalho
+
+O principal objetivo do trabalho é, conforme o enunciado disponibilizado pela professora responsável, *criação de uma ‘interface’ que permita
+automatizar a anonimização e análise de vários conjuntos de dados fazendo variar os parâmetros do modelo de privacidade usado*.
+
+### Abordagem
+
+De modo a conseguir desenvolver o projeto o mais tranquilamente possível, são necessárias algumas bases sobre o funcioncamento da ferramenta ARX, bem
+como conhecimentos sólidos da linguagem Java. Para tal, foi necessário a leitura e análise de documentação disponibilizada pela ferramenta,
+entendimento do significado dos valores estatísticos obtidos, bem como o desenvolvimento de uma versão do projeto em terminal, para fossar possível a
+sua compreensão e posterior desenvolvimento. E desta junção de conhecimentos teóricos das ciências matemáticas com os conhecimentos práticos de
+programação que resulta o desenvolvimento deste trabalho.
+
 ## Estado-da-arte
 
 ### Introdução
@@ -39,7 +61,7 @@ garantir a proteção dos dados sensíveis.
 
 ### ARX - A Tool for Data Anonymization
 
-ARX é uma ferramenta *open source* que permite a anonimização de dados sensíveis. Contém uma grande variedade de
+ARX é uma ferramenta, *open source* que permite a anonimização de dados sensíveis. Contém uma grande variedade de
 algoritmos de anonimização, privacidade, transformação de dados e análise estatística. Contém também ferramentas para
 gráficos, visualização de dados e exportação de dados. Neste projeto, vamos usar a API do ARX que entrega capacidades de
 anonimização de dados para aplicação Java. Para a sua compreensão, vai ser usado a documentação disponibilizada pelo
@@ -268,10 +290,10 @@ a partir dos dados anonimizados.
 ## Modificações feitas na Biblioteca ARX
 
 Durante o desenvolvimento de um projeto de ‘software’, é comum ocorrer conflitos no código que podem levar a erros e
-problemas de funcionamento. Um dos problemas que pode surgir é a leitura duplicada de determinadas ‘*packages*’ do
+problemas de funcionamento. Um dos problemas que pode surgir é a leitura duplicada de determinadas *'packages'* do
 projeto, o que pode causar conflitos no módulo e afetar o desempenho da biblioteca.
 
-Neste projeto, foi identificado que os ‘*packages*’ ‘*java.util*’ e a ‘*javax*’ eram lidas duas vezes, o que
+Neste projeto, foi identificado que os *'packages'* ‘*java.util*’ e a ‘*javax*’ eram lidas duas vezes, o que
 causava conflitos no módulo e afetando o funcionamento da biblioteca. Isso afetava a capacidade da biblioteca de
 lidar com determinados dados.
 
