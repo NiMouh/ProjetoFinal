@@ -10,21 +10,23 @@ public class StatisticsAnonimizedData {
 
     private final DataHandle handlerData;
     private final StatisticsBuilder statisticsBuilder;
+    private final int kValue;
 
-    public StatisticsAnonimizedData(DataHandle data) {
+    public StatisticsAnonimizedData(DataHandle data, int kValue) {
         this.handlerData = data;
         this.statisticsBuilder = handlerData.getStatistics();
+        this.kValue = kValue;
     }
 
     // Function that returns the number of rows in the dataset without considering the suppressed data
-    public int getSupressedData() {
+    public String getSupressedData() {
         int dadosSuprimidos = 0;
         for (int i = 0; i < handlerData.getNumRows(); i++) {
             if (handlerData.isSuppressed(i)) {
                 dadosSuprimidos++;
             }
         }
-        return dadosSuprimidos;
+        return dadosSuprimidos + ";";
     }
 
     // Function that receives the array of quasi-identifiers and returns a String with the column oriented measures
@@ -36,8 +38,8 @@ public class StatisticsAnonimizedData {
 
         String result = "";
 
-        for (String ignored : handlerData.getDefinition().getQuasiIdentifyingAttributes()) {
-            result = result.concat(generalizationIntensity + ";" + missings + ";" + entropy + ";" + squaredError + ";");
+        for (String attribute : handlerData.getDefinition().getQuasiIdentifyingAttributes()) {
+            result = result.concat(generalizationIntensity.getValue(attribute) + ";" + missings.getValue(attribute) + ";" + entropy.getValue(attribute) + ";" + squaredError.getValue(attribute) + "; ;");
         }
 
         return result;
@@ -52,6 +54,11 @@ public class StatisticsAnonimizedData {
         return discernibility.getValue() + ";" + averageClassSize.getValue() + ";" + squaredError.getValue() + ";";
     }
 
+    // Function that returns a String with the k value
+    public String getKValue() {
+        return kValue + ";";
+    }
+
     // Function that returns a String with the risk measures
     public String getRiskMeasures() {
         RiskEstimateBuilder estimate = handlerData.getRiskEstimator();
@@ -59,12 +66,12 @@ public class StatisticsAnonimizedData {
         double journalistRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedJournalistRisk();
         double marketerRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedMarketerRisk();
 
-        return prosecutorRisk + ";" + journalistRisk + ";" + marketerRisk;
+        return getKValue() + prosecutorRisk + ";" + journalistRisk + ";" + marketerRisk;
     }
 
     // Function that returns a String with all the statistics
     public String getFullStatistics() {
-        return getSupressedData() + ";" + getQualityAttributes() + getQualityRecords();
+        return getKValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();
     }
 
 }

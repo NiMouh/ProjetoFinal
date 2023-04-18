@@ -66,6 +66,7 @@ public class RiskController {
         inputTable.getColumns().clear();
 
         String[] header = data.get(0);
+        data.remove(0);
         for (int index = 0; index < header.length; index++) {
             TableColumn<String[], String> column = new TableColumn<>(header[index]);
             final int columnIndex = index;

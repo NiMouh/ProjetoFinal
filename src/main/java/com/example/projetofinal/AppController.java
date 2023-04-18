@@ -107,7 +107,7 @@ public class AppController {
     }
 
     public void viewRisks() {
-        loadPage("risks-screen");
+        loadPage("risk-screen");
     }
 
     // Function that given a page name, loads the page section
@@ -144,10 +144,11 @@ public class AppController {
         ARXConfiguration configuration = ARXConfiguration.create();
         configuration.addPrivacyModel(new KAnonymity(valorK));
         configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
+        dados.getHandle().release();
         try {
             ARXResult result = anonymizer.anonymize(dados, configuration);
             result.getOutput(false).save("data_anonymity_" + valorK + ".csv", ';'); // Save the anonymized data in a CSV file
-            StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false));
+            StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), valorK);
             statistics.add(reviewData.getFullStatistics()); // Save the statistics in the statistics array
             risks.add(reviewData.getRiskMeasures()); // Save the risks in the risks array
         } catch (IOException e) {
@@ -158,7 +159,7 @@ public class AppController {
 
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {
-        return "k;supressed" + "gen. intensity;missings;entropy;squared error; ;".repeat(Math.max(0, NUMERO_DE_QUASE_IDENTIFICADORES)) +
+        return "k;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(Math.max(0, NUMERO_DE_QUASE_IDENTIFICADORES)) +
                 "discernibility;avg. class size;row squared error";
     }
 
@@ -204,6 +205,7 @@ public class AppController {
             inputTable.getColumns().clear();
 
             String[] columnNames = data.get(0);
+            data.remove(0);
             for (int index = 0; index < columnNames.length; index++) {
                 TableColumn<String[], String> column = new TableColumn<>(columnNames[index]);
                 final int columnIndex = index;
