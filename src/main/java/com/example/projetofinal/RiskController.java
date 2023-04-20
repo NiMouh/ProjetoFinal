@@ -54,6 +54,11 @@ public class RiskController {
                 risksWindow(searched);
             }
         });
+
+        // Fix table size
+        inputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        inputTable.prefWidthProperty().bind(tableBox.widthProperty());
+        inputTable.prefHeightProperty().bind(tableBox.heightProperty());
     }
 
     // Shows the risks UI
@@ -92,7 +97,7 @@ public class RiskController {
                     }
                 }
             });
-            column.setStyle("-fx-background-color: #FFFFFF;");
+            column.setStyle("-fx-background-color:#FFFFFF;");
             inputTable.getColumns().add(column);
         }
 

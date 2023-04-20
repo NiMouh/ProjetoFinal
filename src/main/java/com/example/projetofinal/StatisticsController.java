@@ -54,6 +54,11 @@ public class StatisticsController {
                 statisticsWindow(searched);
             }
         });
+
+        // Fix table size
+        inputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        inputTable.prefWidthProperty().bind(tableBox.widthProperty());
+        inputTable.prefHeightProperty().bind(tableBox.heightProperty());
     }
 
     // Shows the statistics UI

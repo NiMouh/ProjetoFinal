@@ -160,7 +160,7 @@
                <Insets bottom="10.0" />
             </VBox.margin>
          </Label>
-         <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
+         <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
             <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
          </ScrollPane>
          <HBox alignment="BOTTOM_CENTER" prefHeight="80.0" prefWidth="704.0">

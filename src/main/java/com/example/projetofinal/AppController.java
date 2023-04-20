@@ -36,6 +36,8 @@ public class AppController {
     private Button minimizeBtn, closeBtn, maximizeBtn;
     @FXML
     private TableView<String[]> inputTable;
+    @FXML
+    private ScrollPane tableBox;
 
     private double xOffset = 0, yOffset = 0;
 
@@ -59,6 +61,11 @@ public class AppController {
         // Table Configuration
         inputTable.setEditable(true);
         setDataTable();
+
+        // Fix table size
+        inputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        inputTable.prefWidthProperty().bind(tableBox.widthProperty());
+        inputTable.prefHeightProperty().bind(tableBox.heightProperty());
 
         // Insert the header in the statistics array
         String statsHeader = makeStatisticHeader();
