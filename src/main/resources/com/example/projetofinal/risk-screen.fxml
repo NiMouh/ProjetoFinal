@@ -10,37 +10,31 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #29273D;"
-            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projetofinal.RiskController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #29273D;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projetofinal.RiskController">
    <padding>
-      <Insets bottom="30.0" top="30.0"/>
+      <Insets bottom="30.0" top="30.0" />
    </padding>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="288.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="36.0"
-          prefWidth="155.0" text="Risco" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0"
-          AnchorPane.topAnchor="5.0">
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="288.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="36.0" prefWidth="155.0" text="Risk" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
       <font>
-         <Font name="Segoe UI Semibold" size="25.0"/>
+         <Font name="Segoe UI Semibold" size="25.0" />
       </font>
    </Label>
-   <VBox fx:id="messageBox" alignment="CENTER" layoutX="248.0" layoutY="92.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0"
-         AnchorPane.topAnchor="92.0">
-      <Label text="Não existem estatísticas para este conjunto de dados." textFill="WHITE">
+   <VBox fx:id="messageBox" alignment="CENTER" layoutX="248.0" layoutY="92.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="92.0">
+      <Label text="There's no statistics to show" textFill="WHITE">
          <font>
-            <Font name="Segoe UI Semibold" size="17.0"/>
+            <Font name="Segoe UI Semibold" size="17.0" />
          </font>
       </Label>
-      <Button fx:id="searchStats" mnemonicParsing="false" style="-fx-background-color: #6794B5;" text="Procurar Ficheiro" textFill="WHITE">
+      <Button fx:id="searchStats" mnemonicParsing="false" style="-fx-background-color: #6794B5;" text="Search file" textFill="WHITE">
          <VBox.margin>
-            <Insets top="5.0"/>
+            <Insets top="5.0" />
          </VBox.margin>
          <cursor>
-            <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
    </VBox>
-   <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" layoutX="77.0" layoutY="130.0" prefHeight="206.0" prefWidth="631.0"
-               style="-fx-background-color: transparent; -fx-fit-to-width: true;" visible="false" AnchorPane.leftAnchor="20.0"
-               AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0">
-      <TableView fx:id="inputTable" style="-fx-background-color: #232132;"/>
+   <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" layoutX="77.0" layoutY="130.0" prefHeight="206.0" prefWidth="631.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0">
+      <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
    </ScrollPane>
 </AnchorPane>

@@ -34,7 +34,7 @@ public class RiskController {
     final FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
-        ObservableList<String[]> data = readCSV("risks.csv");
+        ObservableList<String[]> data = readCSV(AppController.filesPath + "/risks.csv");
 
         if (data == null) { // If it's null, it will hide the table and show a message
             tableBox.setVisible(false);

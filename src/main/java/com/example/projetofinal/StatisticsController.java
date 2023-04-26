@@ -34,7 +34,7 @@ public class StatisticsController {
     final FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
-        ObservableList<String[]> data = readCSV("statistics.csv");
+        ObservableList<String[]> data = readCSV(AppController.filesPath + "/statistics.csv");
 
         if (data == null) { // If it's null, it will hide the table and show a message
             tableBox.setVisible(false);
@@ -117,15 +117,14 @@ public class StatisticsController {
             while ((nextLine = csvReader.readNext()) != null) {
                 data.add(nextLine);
             }
-        } catch (NoSuchFileException e) {
-            // Handle the exception gracefully, for example by displaying a message to the user
-            System.err.println("Ficheiro não encontrado: " + path);
-        } catch (IOException e) {
-            // Handle any other IO exceptions in a similar way
-            System.err.println("Ocorreu um erro ao ler o ficheiro: " + e.getMessage());
         } catch (Exception e) {
             // Catch any other unexpected exceptions
-            System.err.println("Ocorreu um erro inesperado: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error occurred while reading the file");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            return null;
         }
         return data;
     }

@@ -11,9 +11,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.deidentifier.arx.*;
 import org.deidentifier.arx.criteria.KAnonymity;
@@ -41,12 +43,17 @@ public class AppController {
 
     private double xOffset = 0, yOffset = 0;
 
-    private ArrayList<String> statistics = new ArrayList<>();
-    private ArrayList<String> risks = new ArrayList<>();
+    private ArrayList<String> statistics;
+    private ArrayList<String> risks;
 
     private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
+    public static String filesPath;
 
     public void initialize() {
+        // Initialize the statistics array and the risks array
+        statistics = new ArrayList<>();
+        risks = new ArrayList<>();
+
         // Only allow numbers to be typed in the kValue and kStep text fields
         kStep.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
         kMin.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
@@ -76,6 +83,7 @@ public class AppController {
         risks.add(riskHeader);
     }
 
+    // Function that makes the page draggable
     @FXML
     protected void makeStageDraggable() {
         mainPage.setOnMousePressed(event -> {
@@ -101,18 +109,29 @@ public class AppController {
         });
     }
 
+    // Function that changes the page to the setup page
+    public void setupModifications() throws IOException {
+        Stage stage = (Stage) mainPage.getScene().getWindow();
+        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("setup-screen.fxml"))));
+        stage.setScene(scene);
+    }
+
+    // Function that changes the page to the home page
     public void viewModifications() {
         mainPage.setCenter(homeContent);
     }
 
+    // Function that changes the page to the hierarchy page
     public void viewHieararchy() {
         loadPage("hierarchy-screen");
     }
 
+    // Function that changes the page to the statistics page
     public void viewStatistics() {
         loadPage("statistics-screen");
     }
 
+    // Function that changes the page to the risks page
     public void viewRisks() {
         loadPage("risk-screen");
     }
@@ -129,21 +148,44 @@ public class AppController {
 
     // Function to calculate the K-Anonymity given the values of kMin, kMax and kStep
     public void calculateKAnonymity() {
+        // If the textfields are empty, show an error message
+        if (kMin.getText().isEmpty() || kMax.getText().isEmpty() || kStep.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error calculating K-Anonymity");
+            alert.setContentText("The values of K parameters are empty. Please, try again.");
+            alert.showAndWait();
+            return;
+        }
+
         int minimumK = Integer.parseInt(kMin.getText());
         int maximumK = Integer.parseInt(kMax.getText());
         int step = Integer.parseInt(kStep.getText());
+
+        // If the values are invalid, show an error message
+        if (minimumK < 2 || maximumK < minimumK || step < 1 || step > maximumK) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error calculating K-Anonymity");
+            alert.setContentText("The values of kMin, kMax and kStep are invalid. Please, try again.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Create the folder to save the files
+        createFolder();
+
         for (int k = minimumK; k <= maximumK; k += step) {
             anonymizeWithK(inputData, k);
         }
         // Save the statistics and risks in CSV files
-        saveCSV(statistics, "statistics.csv");
-        saveCSV(risks, "risks.csv");
+        saveCSV(statistics, filesPath + "/statistics.csv");
+        saveCSV(risks, filesPath + "/risks.csv");
 
         // Clear the statistics and risks arrays
         statistics.clear();
         risks.clear();
     }
-
 
     // Function to anonymize data using K-Anonymity
     public void anonymizeWithK(Data dados, int valorK) {
@@ -154,7 +196,7 @@ public class AppController {
         dados.getHandle().release();
         try {
             ARXResult result = anonymizer.anonymize(dados, configuration);
-            result.getOutput(false).save("data_anonymity_" + valorK + ".csv", ';'); // Save the anonymized data in a CSV file
+            result.getOutput(false).save(filesPath + "/data_anonymity_" + valorK + ".csv", ';'); // Save the anonymized data in a CSV file
             StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), valorK);
             statistics.add(reviewData.getFullStatistics()); // Save the statistics in the statistics array
             risks.add(reviewData.getRiskMeasures()); // Save the risks in the risks array
@@ -166,7 +208,7 @@ public class AppController {
 
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {
-        return "k;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(Math.max(0, NUMERO_DE_QUASE_IDENTIFICADORES)) +
+        return "k;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(NUMERO_DE_QUASE_IDENTIFICADORES) +
                 "discernibility;avg. class size;row squared error";
     }
 
@@ -191,6 +233,16 @@ public class AppController {
             System.out.println("Os dados foram salvos com sucesso");
         } catch (IOException e) {
             System.out.println("Erro ao salvar arquivo CSV");
+        }
+    }
+
+    // Function that opens file explorer to create a new folder and save path in filePath variable
+    public void createFolder() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(mainPage.getScene().getWindow());
+        if (selectedDirectory != null) {
+            filesPath = selectedDirectory.getAbsolutePath();
+            System.out.println(filesPath);
         }
     }
 

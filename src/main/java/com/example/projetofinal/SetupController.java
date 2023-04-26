@@ -1,14 +1,10 @@
 package com.example.projetofinal;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -57,18 +53,10 @@ public class SetupController {
                     importData(file.getAbsolutePath());
                     dataTypeWindow();
                 }
-            } else if (setupButton.getText().equals("CONTINUAR")) { // Defining data types
+            } else if (setupButton.getText().equals("CONTINUE")) { // Defining data types
                 defineDataTypes();
-                attributeTypeWindow();
-
-            } else if (setupButton.getText().equals("ACEITAR")) { // Defining attribute types
+            } else if (setupButton.getText().equals("ACCEPT")) { // Defining attribute types
                 defineAttributeTypes();
-                SetupController.setData(inputData);
-                try {
-                    newWindow(event);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             }
         });
 
@@ -132,14 +120,18 @@ public class SetupController {
         try {
             inputData = Data.create(filePath, Charset.defaultCharset(), ';');
         } catch (IOException e) {
-            System.out.println("Erro ao importar os dados");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error while importing data");
+            alert.setContentText("An error occurred while importing the data. Please try again.");
+            alert.showAndWait();
         }
     }
 
     // Function that defines the data types
     protected void dataTypeWindow() {
-        setupTitle.setText("Tipo de Dados");
-        setupButton.setText("CONTINUAR");
+        setupTitle.setText("Data Types");
+        setupButton.setText("CONTINUE");
         int numeroColunas = inputData.getHandle().getNumColumns();
         setupButtons = new RadioButton[numeroColunas][NUMERO_TIPOS];
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
@@ -177,7 +169,11 @@ public class SetupController {
         int numeroColunas = inputData.getHandle().getNumColumns();
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
             if (setupButtons[indexColuna][0].getToggleGroup().getSelectedToggle() == null) {
-                System.out.println("Erro");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Data types are not defined");
+                alert.setContentText("Please define the data types for all the columns");
+                alert.showAndWait();
                 return;
             }
             if (setupButtons[indexColuna][0].isSelected()) {
@@ -192,12 +188,15 @@ public class SetupController {
                 inputData.getDefinition().setDataType(inputData.getHandle().getAttributeName(indexColuna), DataType.DECIMAL);
             }
         }
+
+        // Function that opens the window to define the attribute types
+        attributeTypeWindow();
     }
 
     // Function that opens the window to define the attribute types
     protected void attributeTypeWindow() {
-        setupTitle.setText("Tipo de Atributo");
-        setupButton.setText("ACEITAR");
+        setupTitle.setText("Attribute Types");
+        setupButton.setText("ACCEPT");
         IntStream.range(0, inputData.getHandle().getNumColumns()).forEach(indexColuna -> IntStream.range(0, NUMERO_TIPOS).forEach(indexTipo -> {
             setupButtons[indexColuna][indexTipo].setSelected(false);
             setupButtons[indexColuna][indexTipo].setText(attributeTypes[indexTipo]);
@@ -210,7 +209,11 @@ public class SetupController {
         int numeroColunas = inputData.getHandle().getNumColumns();
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
             if (setupButtons[indexColuna][0].getToggleGroup().getSelectedToggle() == null) {
-                System.out.println("Erro");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Attribute types are not defined");
+                alert.setContentText("Please define the attribute types for all the columns");
+                alert.showAndWait();
                 return;
             }
             if (setupButtons[indexColuna][0].isSelected()) {
@@ -223,19 +226,23 @@ public class SetupController {
                 inputData.getDefinition().setAttributeType(inputData.getHandle().getAttributeName(indexColuna), AttributeType.QUASI_IDENTIFYING_ATTRIBUTE);
             }
         }
+
+        // Function that opens the new window
+        try {
+            newWindow(setupButton);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Function that opens a new window
-    protected void newWindow(ActionEvent event) throws IOException {
-        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+    protected void newWindow(Button button) throws IOException {
+        Stage stage = (Stage) button.getScene().getWindow();
         Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("program-screen.fxml"))));
         stage.setScene(scene);
     }
 
     public static Data getData() {
         return inputData;
-    }
-    public static void setData(Data data) {
-        inputData = data;
     }
 }

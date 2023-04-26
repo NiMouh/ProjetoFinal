@@ -1,6 +1,7 @@
 package com.example.projetofinal;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -52,7 +53,11 @@ public class HierarchyController {
             AttributeType.Hierarchy hierarchy = AttributeType.Hierarchy.create(file, Charset.defaultCharset(), ';');
             inputData.getDefinition().setHierarchy(attributeName, hierarchy);
         } catch (IOException e) {
-            System.out.println("Erro ao importar a hierarquia.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error importing hierarchy");
+            alert.setContentText("The hierarchy file is not valid.");
+            alert.showAndWait();
         }
     }
 }

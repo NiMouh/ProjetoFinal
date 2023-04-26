@@ -14,24 +14,23 @@
    <padding>
       <Insets bottom="30.0" top="30.0" />
    </padding>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="288.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="36.0" prefWidth="155.0" text="Estatísticas" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="288.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="36.0" prefWidth="155.0" text="Statistics" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
       <font>
          <Font name="Segoe UI Semibold" size="25.0" />
       </font>
    </Label>
-   <VBox fx:id="messageBox" alignment="CENTER" layoutX="248.0" layoutY="92.0" AnchorPane.leftAnchor="100.0"
-         AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="92.0">
-      <Label text="Não existem estatísticas para este conjunto de dados." textFill="WHITE">
+   <VBox fx:id="messageBox" alignment="CENTER" layoutX="248.0" layoutY="92.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="92.0">
+      <Label text="There's no statistics to show" textFill="WHITE">
          <font>
-            <Font name="Segoe UI Semibold" size="17.0"/>
+            <Font name="Segoe UI Semibold" size="17.0" />
          </font>
       </Label>
       <Button fx:id="searchStats" mnemonicParsing="false" style="-fx-background-color: #6794B5;" text="Procurar Ficheiro" textFill="WHITE">
          <VBox.margin>
-            <Insets top="5.0"/>
+            <Insets top="5.0" />
          </VBox.margin>
          <cursor>
-            <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
    </VBox>
