@@ -3,7 +3,6 @@ package com.example.projetofinal;
 import org.deidentifier.arx.DataHandle;
 import org.deidentifier.arx.aggregates.StatisticsBuilder;
 import org.deidentifier.arx.aggregates.quality.QualityMeasureColumnOriented;
-import org.deidentifier.arx.aggregates.quality.QualityMeasureRowOriented;
 import org.deidentifier.arx.risk.RiskEstimateBuilder;
 
 public class StatisticsAnonimizedData {
@@ -39,7 +38,7 @@ public class StatisticsAnonimizedData {
         String result = "";
 
         for (String attribute : handlerData.getDefinition().getQuasiIdentifyingAttributes()) {
-            result = result.concat(generalizationIntensity.getValue(attribute) + ";" + missings.getValue(attribute) + ";" + entropy.getValue(attribute) + ";" + squaredError.getValue(attribute) + "; ;");
+            result = result.concat(String.format("%.3f", generalizationIntensity.getValue(attribute) * 100) + ";" + String.format("%.3f", missings.getValue(attribute) * 100) + ";" + String.format("%.3f", entropy.getValue(attribute) * 100) + ";" + String.format("%.3f", squaredError.getValue(attribute) * 100) + "; ;");
         }
 
         return result;
@@ -47,11 +46,11 @@ public class StatisticsAnonimizedData {
 
     // Function that returns a String with the row oriented measures
     public String getQualityRecords() {
-        QualityMeasureRowOriented discernibility = statisticsBuilder.getQualityStatistics().getDiscernibility();
-        QualityMeasureRowOriented averageClassSize = statisticsBuilder.getQualityStatistics().getAverageClassSize();
-        QualityMeasureRowOriented squaredError = statisticsBuilder.getQualityStatistics().getRecordLevelSquaredError();
+        double discernibility = statisticsBuilder.getQualityStatistics().getDiscernibility().getValue() * 100;
+        double averageClassSize = statisticsBuilder.getQualityStatistics().getAverageClassSize().getValue() * 100;
+        double squaredError = statisticsBuilder.getQualityStatistics().getRecordLevelSquaredError().getValue() * 100;
 
-        return discernibility.getValue() + ";" + averageClassSize.getValue() + ";" + squaredError.getValue() + ";";
+        return String.format("%.3f", discernibility) + ";" + String.format("%.3f", averageClassSize) + ";" + String.format("%.3f", squaredError) + ";";
     }
 
     // Function that returns a String with the k value
@@ -62,11 +61,12 @@ public class StatisticsAnonimizedData {
     // Function that returns a String with the risk measures
     public String getRiskMeasures() {
         RiskEstimateBuilder estimate = handlerData.getRiskEstimator();
-        double prosecutorRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedProsecutorRisk();
-        double journalistRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedJournalistRisk();
-        double marketerRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedMarketerRisk();
+        double prosecutorRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedProsecutorRisk() * 100;
+        double journalistRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedJournalistRisk() * 100;
+        double marketerRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedMarketerRisk() * 100;
 
-        return getKValue() + prosecutorRisk + ";" + journalistRisk + ";" + marketerRisk;
+        // Return  the K value and the risk measures (they should be in % with 2 decimal places)
+        return getKValue() + String.format("%.3f", prosecutorRisk) + ";" + String.format("%.3f", journalistRisk) + ";" + String.format("%.3f", marketerRisk);
     }
 
     // Function that returns a String with all the statistics

@@ -45,7 +45,6 @@ public class AppController {
 
     private ArrayList<String> statistics;
     private ArrayList<String> risks;
-
     private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
     public static String filesPath;
 
@@ -73,14 +72,6 @@ public class AppController {
         inputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         inputTable.prefWidthProperty().bind(tableBox.widthProperty());
         inputTable.prefHeightProperty().bind(tableBox.heightProperty());
-
-        // Insert the header in the statistics array
-        String statsHeader = makeStatisticHeader();
-        statistics.add(statsHeader);
-
-        // Insert the header in the risk array
-        String riskHeader = makeRiskHeader();
-        risks.add(riskHeader);
     }
 
     // Function that makes the page draggable
@@ -149,7 +140,7 @@ public class AppController {
     // Function to calculate the K-Anonymity given the values of kMin, kMax and kStep
     public void calculateKAnonymity() {
         // If the textfields are empty, show an error message
-        if (kMin.getText().isEmpty() || kMax.getText().isEmpty() || kStep.getText().isEmpty()){
+        if (kMin.getText().isEmpty() || kMax.getText().isEmpty() || kStep.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Error calculating K-Anonymity");
@@ -175,9 +166,18 @@ public class AppController {
         // Create the folder to save the files
         createFolder();
 
+        // Insert the header in the statistics array
+        String statsHeader = makeStatisticHeader();
+        statistics.add(statsHeader);
+
+        // Insert the header in the risk array
+        String riskHeader = makeRiskHeader();
+        risks.add(riskHeader);
+
         for (int k = minimumK; k <= maximumK; k += step) {
             anonymizeWithK(inputData, k);
         }
+
         // Save the statistics and risks in CSV files
         saveCSV(statistics, filesPath + "/statistics.csv");
         saveCSV(risks, filesPath + "/risks.csv");
@@ -214,7 +214,7 @@ public class AppController {
 
     // Function to create the header of the CSV file (risk.csv)
     public String makeRiskHeader() {
-        return "k;prosecutor risk;journalist risk;journalist risk";
+        return "k;prosecutor risk;journalist risk;marketer risk";
     }
 
     // Function that given a bidimensional array of strings, save in a CSV file
@@ -301,4 +301,5 @@ public class AppController {
             throw new RuntimeException(e);
         }
     }
+
 }
