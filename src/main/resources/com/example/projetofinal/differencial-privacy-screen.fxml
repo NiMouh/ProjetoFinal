@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane style="-fx-background-color: #29273D;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label alignment="CENTER" layoutX="71.0" layoutY="22.0" text="Inserted Data" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="41.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="15.0">
+         <font>
+            <Font name="Segoe UI Semibold" size="25.0" />
+         </font>
+      </Label>
+      <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" layoutX="35.0" layoutY="142.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="70.0">
+         <content>
+            <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
+         </content>
+      </ScrollPane>
+      <HBox alignment="CENTER" layoutX="60.0" layoutY="323.0" prefHeight="50.0" prefWidth="200.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="290.0">
+         <children>
+            <TextField promptText="Epsilon Value" style="-fx-background-color: #343248;">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </TextField>
+            <TextField promptText="Delta Value" style="-fx-background-color: #343248;" />
+         </children>
+      </HBox>
+      <Button layoutX="328.0" layoutY="370.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #6794B5; -fx-border-radius: 5px;" text="Anonimyze with DP" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="350.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+   </children>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+</AnchorPane>

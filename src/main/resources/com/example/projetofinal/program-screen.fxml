@@ -37,7 +37,7 @@
             <VBox.margin>
                <Insets bottom="15.0" />
             </VBox.margin>
-            <Button mnemonicParsing="false" onMouseClicked="#viewModifications" style="-fx-background-color: none;" text="VISUALIZE DATA" textFill="WHITE">
+            <Button mnemonicParsing="false" onMouseClicked="#viewModifications" style="-fx-background-color: none;" text="K-ANONYMITY" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -45,6 +45,21 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+         </VBox>
+         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
+            <children>
+               <Button mnemonicParsing="false" onMouseClicked="#viewDifferencialPrivacy" style="-fx-background-color: none;" text="DIFFERENCIAL PRIVACY" textFill="WHITE">
+                  <font>
+                     <Font name="System Bold" size="13.0" />
+                  </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </Button>
+            </children>
+            <VBox.margin>
+               <Insets bottom="15.0" />
+            </VBox.margin>
          </VBox>
          <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
             <Button mnemonicParsing="false" onMouseClicked="#viewHieararchy" style="-fx-background-color: none;" text="IMPORT HIERARCHIES" textFill="WHITE">
@@ -182,7 +197,7 @@
             </TextField>
             <TextField fx:id="kStep" promptText="Step between K's" style="-fx-background-color: #343248; -fx-text-fill: white;" />
          </HBox>
-         <Button mnemonicParsing="false" onMouseClicked="#calculateKAnonymity" prefHeight="43.0" prefWidth="148.0" style="-fx-background-color: #6794B5; -fx-background-radius: 5px;" text="Anonymize in K" textFill="WHITE">
+         <Button mnemonicParsing="false" onMouseClicked="#calculateKAnonymity" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #6794B5; -fx-background-radius: 5px;" text="Anonymize in K" textFill="WHITE">
             <font>
                <Font size="16.0" />
             </font>

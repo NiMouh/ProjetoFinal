@@ -17,7 +17,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import org.deidentifier.arx.*;
+import org.deidentifier.arx.ARXAnonymizer;
+import org.deidentifier.arx.ARXConfiguration;
+import org.deidentifier.arx.ARXResult;
+import org.deidentifier.arx.Data;
 import org.deidentifier.arx.criteria.KAnonymity;
 
 import java.io.*;
@@ -110,6 +113,11 @@ public class AppController {
     // Function that changes the page to the home page
     public void viewModifications() {
         mainPage.setCenter(homeContent);
+    }
+
+    // Function that changes the page to the differencial privacy page
+    public void viewDifferencialPrivacy() {
+        loadPage("differencial-privacy-screen");
     }
 
     // Function that changes the page to the hierarchy page
@@ -205,6 +213,8 @@ public class AppController {
         }
         System.out.println("Dados Anonimizados com sucesso");
     }
+
+    // TO DO: Class EDDifferentialPrivacy
 
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {

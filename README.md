@@ -67,6 +67,23 @@ gráficos, visualização de dados e exportação de dados. Neste projeto, vamos
 anonimização de dados para aplicação Java. Para a sua compreensão, vai ser usado a documentação disponibilizada pelo
 ARX.
 
+### Tipos de Atributos
+
+As especificidades dos riscos de divulgação dos quais um conjunto de dados deve ser protegido podem ser especificadas através da categorização dos
+atributos do conjunto de dados de entrada em diferentes tipos:
+
+1. Os atributos **identificadores** estão associados a um risco elevado de reidentificação. Serão removidos do conjunto de dados. Exemplos típicos são
+   nomes ou números de segurança social.
+
+2. Os atributos **quase identificadores** podem, em combinação, ser utilizados para ataques de reidentificação. Serão transformados. Exemplos típicos
+   são o género, a data de nascimento e os códigos postais.
+
+3. Os atributos **sensíveis** codificam propriedades com as quais os indivíduos não estão dispostos a ser associados. Como tal, podem ter interesse
+   para um atacante e, se divulgados, podem causar danos aos titulares dos dados. Serão mantidos inalterados, mas podem estar sujeitos a outras
+   restrições, como a *Proximity T* ou a *Diversity L*. Exemplos típicos são os diagnósticos.
+
+4. Os atributos *insensíveis* não estão associados a riscos para a privacidade. Serão mantidos inalterados.
+
 ### Modelos de privacidade
 
 #### Algoritmos de Agrupamento/ Clustering Algorithms
@@ -99,7 +116,12 @@ dados não sejam **reidentificados**.
 #### Privacidade Diferencial (*Differential Privacy*)
 
 A privacidade diferencial é um modelo de privacidade que garante que os dados sensíveis não são divulgados e que os
-dados não são reidentificados. O modelo de privacidade diferencial é baseado em 2 princípios:
+dados não são reidentificados. Neste modelo são definidas duas variáveis *epsilon* e *delta*. O *epsilon* é uma variável
+que define o grau de aleatoriedade dos dados. O *delta* é uma variável que define a probabilidade que representa o risco
+de reidentificação. Quanto menor o valor de delta, menor é a probabilidade de que a privacidade dos dados seja comprometida,
+porém, maior é o grau de aleatoriedade dos dados.
+
+O modelo de privacidade diferencial é baseado em 2 princípios:
 
 ##### Diferencial de Laplace
 

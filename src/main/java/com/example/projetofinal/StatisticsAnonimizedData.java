@@ -20,8 +20,8 @@ public class StatisticsAnonimizedData {
     // Function that returns the number of rows in the dataset without considering the suppressed data
     public String getSupressedData() {
         int dadosSuprimidos = 0;
-        for (int i = 0; i < handlerData.getNumRows(); i++) {
-            if (handlerData.isSuppressed(i)) {
+        for (int indexRow = 0; indexRow < handlerData.getNumRows(); indexRow++) {
+            if (handlerData.isSuppressed(indexRow)) {
                 dadosSuprimidos++;
             }
         }
