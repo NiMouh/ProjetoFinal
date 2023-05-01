@@ -42,6 +42,8 @@ public class SetupController {
     public static Data inputData;
     private static final String[] dataTypes = {"String", "Integer", "Ordinal", "Date", "Decimal"};
 
+    public static String DATA_SOURCE_PATH;
+
     private static final String[] attributeTypes = {"Identifying", "Sensitive", "Not Sensitive", "Quasi-identifying", "Suppressed"};
     private static final int NUMERO_TIPOS = 5;
 
@@ -50,7 +52,8 @@ public class SetupController {
             if (setupButton.getText().equals("SRC")) { // Open search file window
                 File file = fileChooser.showOpenDialog(new Stage());
                 if (file != null) {
-                    importData(file.getAbsolutePath());
+                    DATA_SOURCE_PATH = file.getAbsolutePath();
+                    importData(DATA_SOURCE_PATH);
                     dataTypeWindow();
                 }
             } else if (setupButton.getText().equals("CONTINUE")) { // Defining data types

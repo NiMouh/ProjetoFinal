@@ -69,7 +69,7 @@ public class AppController {
 
         // Table Configuration
         inputTable.setEditable(true);
-        setDataTable();
+        setDataTable(inputTable);
 
         // Fix table size
         inputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -214,8 +214,6 @@ public class AppController {
         System.out.println("Dados Anonimizados com sucesso");
     }
 
-    // TO DO: Class EDDifferentialPrivacy
-
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {
         return "k;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(NUMERO_DE_QUASE_IDENTIFICADORES) +
@@ -257,10 +255,10 @@ public class AppController {
     }
 
     // Function that given a CSV file, creates the columns and the rows of a table
-    public void setDataTable() {
+    public static void setDataTable(TableView<String[]> table) {
 
         try {
-            Reader reader = Files.newBufferedReader(Paths.get("data.csv"));
+            Reader reader = Files.newBufferedReader(Paths.get(SetupController.DATA_SOURCE_PATH));
             CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
             CSVReader csvReader = new CSVReaderBuilder(reader).withCSVParser(parser).build();
 
@@ -271,7 +269,7 @@ public class AppController {
             }
 
             // Clear existing columns
-            inputTable.getColumns().clear();
+            table.getColumns().clear();
 
             String[] columnNames = data.get(0);
             data.remove(0);
@@ -301,12 +299,12 @@ public class AppController {
                     }
                 });
                 column.setStyle("-fx-background-color: #FFFFFF;");
-                inputTable.getColumns().add(column);
+                table.getColumns().add(column);
             }
 
 
             // Set the items property of the TableView to an ObservableList of the data from the CSV file
-            inputTable.setItems(data);
+            table.setItems(data);
         } catch (CsvValidationException | IOException e) {
             throw new RuntimeException(e);
         }
