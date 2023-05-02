@@ -52,10 +52,6 @@ public class AppController {
     public static String filesPath;
 
     public void initialize() {
-        // Initialize the statistics array and the risks array
-        statistics = new ArrayList<>();
-        risks = new ArrayList<>();
-
         // Only allow numbers to be typed in the kValue and kStep text fields
         kStep.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
         kMin.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
@@ -75,6 +71,10 @@ public class AppController {
         inputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         inputTable.prefWidthProperty().bind(tableBox.widthProperty());
         inputTable.prefHeightProperty().bind(tableBox.heightProperty());
+
+        // Initialize the statistics array and the risks array
+        statistics = new ArrayList<>();
+        risks = new ArrayList<>();
     }
 
     // Function that makes the page draggable

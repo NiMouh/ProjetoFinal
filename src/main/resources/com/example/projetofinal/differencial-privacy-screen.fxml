@@ -28,12 +28,12 @@
    </ScrollPane>
    <HBox alignment="CENTER" layoutX="60.0" layoutY="323.0" prefHeight="50.0" prefWidth="200.0" AnchorPane.leftAnchor="30.0"
          AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="290.0">
-      <TextField promptText="Epsilon Value" style="-fx-background-color: #343248;">
+      <TextField fx:id="epsilonField" promptText="Epsilon Value" style="-fx-background-color: #343248;">
          <HBox.margin>
             <Insets right="10.0"/>
          </HBox.margin>
       </TextField>
-      <TextField promptText="Delta Value" style="-fx-background-color: #343248;"/>
+      <TextField fx:id="deltaField" promptText="Delta Value" style="-fx-background-color: #343248;"/>
    </HBox>
    <Button layoutX="328.0" layoutY="370.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0"
            style="-fx-background-color: #6794B5; -fx-border-radius: 5px;" text="Anonimyze with DP" textFill="WHITE" AnchorPane.leftAnchor="100.0"
