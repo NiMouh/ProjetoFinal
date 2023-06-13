@@ -5,6 +5,8 @@ import org.deidentifier.arx.aggregates.StatisticsBuilder;
 import org.deidentifier.arx.aggregates.quality.QualityMeasureColumnOriented;
 import org.deidentifier.arx.risk.RiskEstimateBuilder;
 
+import java.text.DecimalFormat;
+
 public class StatisticsAnonimizedData {
 
     private final DataHandle handlerData;
@@ -15,6 +17,15 @@ public class StatisticsAnonimizedData {
         this.handlerData = data;
         this.statisticsBuilder = handlerData.getStatistics();
         this.kValue = kValue;
+    }
+
+    // TODO: Criar condição para caso o handle for nulo, devolver uma linha vazia
+    public String emptyLineStats() {
+        return ";" + ";" + ";".repeat(4 * handlerData.getDefinition().getQuasiIdentifyingAttributes().size() + 3);
+    }
+
+    public String emptyLineRisk() {
+        return ";" + ";".repeat(3);
     }
 
     // Function that returns the number of rows in the dataset without considering the suppressed data
@@ -30,6 +41,7 @@ public class StatisticsAnonimizedData {
 
     // Function that receives the array of quasi-identifiers and returns a String with the column oriented measures
     public String getQualityAttributes() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         QualityMeasureColumnOriented generalizationIntensity = statisticsBuilder.getQualityStatistics().getGeneralizationIntensity();
         QualityMeasureColumnOriented missings = statisticsBuilder.getQualityStatistics().getMissings();
         QualityMeasureColumnOriented entropy = statisticsBuilder.getQualityStatistics().getNonUniformEntropy();
@@ -38,7 +50,7 @@ public class StatisticsAnonimizedData {
         String result = "";
 
         for (String attribute : handlerData.getDefinition().getQuasiIdentifyingAttributes()) {
-            result = result.concat(String.format("%.3f", generalizationIntensity.getValue(attribute) * 100) + ";" + String.format("%.3f", missings.getValue(attribute) * 100) + ";" + String.format("%.3f", entropy.getValue(attribute) * 100) + ";" + String.format("%.3f", squaredError.getValue(attribute) * 100) + "; ;");
+            result = result.concat(decimalFormat.format(generalizationIntensity.getValue(attribute) * 100) + ";" + decimalFormat.format(missings.getValue(attribute) * 100) + ";" + decimalFormat.format(entropy.getValue(attribute) * 100) + ";" + decimalFormat.format(squaredError.getValue(attribute) * 100) + "; ;");
         }
 
         return result;
@@ -46,11 +58,12 @@ public class StatisticsAnonimizedData {
 
     // Function that returns a String with the row oriented measures
     public String getQualityRecords() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         double discernibility = statisticsBuilder.getQualityStatistics().getDiscernibility().getValue() * 100;
         double averageClassSize = statisticsBuilder.getQualityStatistics().getAverageClassSize().getValue() * 100;
         double squaredError = statisticsBuilder.getQualityStatistics().getRecordLevelSquaredError().getValue() * 100;
 
-        return String.format("%.3f", discernibility) + ";" + String.format("%.3f", averageClassSize) + ";" + String.format("%.3f", squaredError) + ";";
+        return decimalFormat.format(discernibility) + ";" + decimalFormat.format(averageClassSize) + ";" + decimalFormat.format(squaredError) + ";";
     }
 
     // Function that returns a String with the k value
@@ -60,17 +73,22 @@ public class StatisticsAnonimizedData {
 
     // Function that returns a String with the risk measures
     public String getRiskMeasures() {
+        if (handlerData == null) return emptyLineRisk();
+
         RiskEstimateBuilder estimate = handlerData.getRiskEstimator();
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         double prosecutorRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedProsecutorRisk() * 100;
         double journalistRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedJournalistRisk() * 100;
         double marketerRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedMarketerRisk() * 100;
 
         // Return  the K value and the risk measures (they should be in % with 2 decimal places)
-        return getKValue() + String.format("%.3f", prosecutorRisk) + ";" + String.format("%.3f", journalistRisk) + ";" + String.format("%.3f", marketerRisk);
+        return getKValue() + decimalFormat.format(prosecutorRisk) + ";" + decimalFormat.format(journalistRisk) + ";" + decimalFormat.format(marketerRisk) + ";";
     }
 
     // Function that returns a String with all the statistics
     public String getFullStatistics() {
+        if (handlerData == null) return emptyLineStats();
+
         return getKValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();
     }
 

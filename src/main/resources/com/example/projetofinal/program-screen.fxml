@@ -168,7 +168,7 @@
    <center>
       <VBox fx:id="homeContent" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #29273D;" BorderPane.alignment="CENTER">
          <padding>
-            <Insets left="30.0" right="30.0" top="30.0" />
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
          </padding>
          <Label text="Inserted Data" textFill="WHITE">
             <font>
@@ -178,12 +178,12 @@
                <Insets bottom="10.0" />
             </VBox.margin>
          </Label>
-         <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
+         <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" prefHeight="300.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;">
             <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
          </ScrollPane>
-         <HBox alignment="BOTTOM_CENTER" prefHeight="80.0" prefWidth="704.0">
+         <HBox alignment="BOTTOM_CENTER" prefHeight="50.0" prefWidth="704.0">
             <VBox.margin>
-               <Insets bottom="20.0" />
+               <Insets bottom="10.0" />
             </VBox.margin>
             <TextField fx:id="kMin" promptText="Minimum K Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
                <HBox.margin>
@@ -204,7 +204,13 @@
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
          </Button>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </VBox>
    </center>
 </BorderPane>

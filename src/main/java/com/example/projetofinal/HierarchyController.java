@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 import java.util.Set;
 
 public class HierarchyController {
-    public static Data inputData = SetupController.getData();
+    public Data inputData = SetupController.getData();
     @FXML
     private HBox hierarchyContainer;
 
@@ -52,6 +52,11 @@ public class HierarchyController {
             if (file == null) return;
             AttributeType.Hierarchy hierarchy = AttributeType.Hierarchy.create(file, Charset.defaultCharset(), ';');
             inputData.getDefinition().setHierarchy(attributeName, hierarchy);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText("Hierarchy imported successfully");
+            alert.setContentText("The hierarchy file was imported successfully.");
+            alert.showAndWait();
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,32 +23,34 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class SetupController {
+    public ToggleGroup delimiter_group, format_group;
     @FXML
     private Label setupTitle;
-
-    @FXML
-    private Button setupButton;
-
     @FXML
     private RadioButton[][] setupButtons;
     @FXML
-    private Button closeBtn, minimizeBtn, maximizeBtn;
+    private Button setupButton, closeBtn, minimizeBtn, maximizeBtn;
     @FXML
     private HBox setupButtonContainer;
     @FXML
     private BorderPane mainPage;
-    private static double xOffset = 0, yOffset = 0;
+    private double xOffset = 0, yOffset = 0;
 
     final FileChooser fileChooser = new FileChooser();
     public static Data inputData;
     private static final String[] dataTypes = {"String", "Integer", "Ordinal", "Date", "Decimal"};
 
-    public static String DATA_SOURCE_PATH;
+    public static String DATA_SOURCE_PATH, format;
+    public static char delimiter;
 
     private static final String[] attributeTypes = {"Identifying", "Sensitive", "Not Sensitive", "Quasi-identifying", "Suppressed"};
     private static final int NUMERO_TIPOS = 5;
 
     public void initialize() {
+        delimiter = ';';
+        format = "CSV";
+
+
         setupButton.setOnAction(event -> {
             if (setupButton.getText().equals("SRC")) { // Open search file window
                 File file = fileChooser.showOpenDialog(new Stage());
@@ -60,6 +63,23 @@ public class SetupController {
                 defineDataTypes();
             } else if (setupButton.getText().equals("ACCEPT")) { // Defining attribute types
                 defineAttributeTypes();
+            }
+        });
+
+        // Choose the delimiter by the char in toggle group delimiter_group
+        delimiter_group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (delimiter_group.getSelectedToggle() != null) {
+                RadioButton selectedRadioButton = (RadioButton) delimiter_group.getSelectedToggle();
+                String radioButtonText = selectedRadioButton.getText();
+                delimiter = radioButtonText.charAt(0);
+            }
+        });
+
+        // Choose the format by the char in toggle group format_group
+        format_group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (format_group.getSelectedToggle() != null) {
+                RadioButton selectedRadioButton = (RadioButton) format_group.getSelectedToggle();
+                format = selectedRadioButton.getText();
             }
         });
 
@@ -121,7 +141,9 @@ public class SetupController {
     // Function that imports the data from the file
     protected void importData(String filePath) {
         try {
-            inputData = Data.create(filePath, Charset.defaultCharset(), ';');
+            inputData = Data.create(filePath, Charset.defaultCharset(), delimiter);
+            System.out.println(inputData);
+            setupButtonContainer.getChildren().clear();
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -136,12 +158,16 @@ public class SetupController {
         setupTitle.setText("Data Types");
         setupButton.setText("CONTINUE");
         int numeroColunas = inputData.getHandle().getNumColumns();
+        setupButtonContainer.setSpacing(5);
         setupButtons = new RadioButton[numeroColunas][NUMERO_TIPOS];
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
             Label columnName = new Label(inputData.getHandle().getAttributeName(indexColuna));
             columnName.setStyle("-fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;-fx-alignment: center;");
+
             VBox dataTypeColumn = new VBox();
             dataTypeColumn.getChildren().addAll(columnName);
+
+            HBox.setHgrow(dataTypeColumn, Priority.ALWAYS);
             ToggleGroup buttonGroup = new ToggleGroup();
             for (int indexTipo = 0; indexTipo < NUMERO_TIPOS; indexTipo++) {
                 RadioButton button = createRadioButton(dataTypes[indexTipo], buttonGroup);
@@ -155,13 +181,13 @@ public class SetupController {
     // Function that creates the radio buttons
     private RadioButton createRadioButton(String text, ToggleGroup toggleGroup) {
         RadioButton button = new RadioButton(text);
-        button.setStyle("-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;");
+        button.setStyle("-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px;-fx-min-width: 100px;");
         button.setToggleGroup(toggleGroup);
         button.selectedProperty().addListener(event -> {
             if (button.isSelected()) {
-                button.setStyle("-fx-background-color: #6794B5; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;");
+                button.setStyle("-fx-background-color: #6794B5; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px;-fx-min-width: 100px;");
             } else {
-                button.setStyle("-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;");
+                button.setStyle("-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px; -fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px;-fx-min-width: 100px;");
             }
         });
         return button;
@@ -233,7 +259,7 @@ public class SetupController {
         // Function that opens the new window
         try {
             newWindow(setupButton);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

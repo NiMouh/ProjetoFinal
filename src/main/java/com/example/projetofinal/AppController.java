@@ -17,10 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import org.deidentifier.arx.ARXAnonymizer;
-import org.deidentifier.arx.ARXConfiguration;
-import org.deidentifier.arx.ARXResult;
-import org.deidentifier.arx.Data;
+import org.deidentifier.arx.*;
 import org.deidentifier.arx.criteria.KAnonymity;
 
 import java.io.*;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class AppController {
-    public static Data inputData = SetupController.getData();
     @FXML
     private BorderPane mainPage;
     @FXML
@@ -46,8 +42,9 @@ public class AppController {
 
     private double xOffset = 0, yOffset = 0;
 
-    private ArrayList<String> statistics;
-    private ArrayList<String> risks;
+    public Data inputData = SetupController.getData();
+    private static ArrayList<String> statistics;
+    private static ArrayList<String> risks;
     private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
     public static String filesPath;
 
@@ -182,9 +179,17 @@ public class AppController {
         String riskHeader = makeRiskHeader();
         risks.add(riskHeader);
 
+        // For each value of k, create a thread to anonymize the data
         for (int k = minimumK; k <= maximumK; k += step) {
             anonymizeWithK(inputData, k);
         }
+
+        // Show a success message
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText("Success anonymizing data");
+        alert.setContentText("The data was anonymized successfully.");
+        alert.showAndWait();
 
         // Save the statistics and risks in CSV files
         saveCSV(statistics, filesPath + "/statistics.csv");
@@ -204,12 +209,15 @@ public class AppController {
         dados.getHandle().release();
         try {
             ARXResult result = anonymizer.anonymize(dados, configuration);
-            result.getOutput(false).save(filesPath + "/data_anonymity_" + valorK + ".csv", ';'); // Save the anonymized data in a CSV file
+            String firstQuasiIdentifier = inputData.getDefinition().getQuasiIdentifyingAttributes().iterator().next();
+            DataHandle handle = result.getOutput(false);
+            handle.sort(true, dados.getHandle().getColumnIndexOf(firstQuasiIdentifier));
+            handle.save(filesPath + "/data_anonymity_" + valorK + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
             StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), valorK);
             statistics.add(reviewData.getFullStatistics()); // Save the statistics in the statistics array
             risks.add(reviewData.getRiskMeasures()); // Save the risks in the risks array
-        } catch (IOException e) {
-            System.out.println("Erro ao anonimizar os dados");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         System.out.println("Dados Anonimizados com sucesso");
     }
@@ -238,7 +246,6 @@ public class AppController {
             }
 
             bw.close();
-            System.out.println("Os dados foram salvos com sucesso");
         } catch (IOException e) {
             System.out.println("Erro ao salvar arquivo CSV");
         }
@@ -250,7 +257,6 @@ public class AppController {
         File selectedDirectory = directoryChooser.showDialog(mainPage.getScene().getWindow());
         if (selectedDirectory != null) {
             filesPath = selectedDirectory.getAbsolutePath();
-            System.out.println(filesPath);
         }
     }
 
@@ -259,7 +265,7 @@ public class AppController {
 
         try {
             Reader reader = Files.newBufferedReader(Paths.get(SetupController.DATA_SOURCE_PATH));
-            CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
+            CSVParser parser = new CSVParserBuilder().withSeparator(SetupController.delimiter).build();
             CSVReader csvReader = new CSVReaderBuilder(reader).withCSVParser(parser).build();
 
             ObservableList<String[]> data = FXCollections.observableArrayList();

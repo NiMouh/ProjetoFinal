@@ -119,13 +119,25 @@ public class RiskController {
             }
         } catch (NoSuchFileException e) {
             // Handle the exception gracefully, for example by displaying a message to the user
-            System.err.println("File not found: " + path);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("File not found");
+            alert.setContentText("The file was not found. Please, check if the file exists.");
+            alert.showAndWait();
         } catch (IOException e) {
             // Handle any other IO exceptions in a similar way
-            System.err.println("An IO exception occurred while reading the file: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Unexpected error");
+            alert.setContentText("An unexpected error has occurred. Please, check if the file is in the correct format.");
+            alert.showAndWait();
         } catch (Exception e) {
             // Catch any other unexpected exceptions
-            System.err.println("An unexpected exception occurred: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Unexpected error");
+            alert.setContentText("An unexpected error has occurred. Please, check if the file is in the correct format.");
+            alert.showAndWait();
         }
         return data;
     }

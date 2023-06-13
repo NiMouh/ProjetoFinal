@@ -34,7 +34,7 @@
          </cursor>
       </Button>
    </VBox>
-   <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" layoutX="77.0" layoutY="130.0" prefHeight="206.0" prefWidth="631.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0">
+   <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" layoutX="77.0" layoutY="130.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0">
       <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
    </ScrollPane>
 </AnchorPane>
