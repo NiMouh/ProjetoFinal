@@ -46,20 +46,20 @@
                </cursor>
             </Button>
          </VBox>
-         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
-            <children>
-               <Button mnemonicParsing="false" onMouseClicked="#viewDifferencialPrivacy" style="-fx-background-color: none;" text="DIFFERENCIAL PRIVACY" textFill="WHITE">
-                  <font>
-                     <Font name="System Bold" size="13.0" />
-                  </font>
-                  <cursor>
-                     <Cursor fx:constant="HAND" />
-                  </cursor>
-               </Button>
-            </children>
+         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0"
+               style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
             <VBox.margin>
-               <Insets bottom="15.0" />
+               <Insets bottom="15.0"/>
             </VBox.margin>
+            <Button mnemonicParsing="false" onMouseClicked="#viewDifferencialPrivacy"
+                    style="-fx-background-color: none;" text="DIFFERENCIAL PRIVACY" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0"/>
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND"/>
+               </cursor>
+            </Button>
          </VBox>
          <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
             <Button mnemonicParsing="false" onMouseClicked="#viewHieararchy" style="-fx-background-color: none;" text="IMPORT HIERARCHIES" textFill="WHITE">

@@ -3,8 +3,13 @@ package com.example.projetofinal;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
+import org.deidentifier.arx.*;
+import org.deidentifier.arx.criteria.EDDifferentialPrivacy;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class DifferencialPrivacyController {
@@ -21,6 +26,8 @@ public class DifferencialPrivacyController {
     private ArrayList<String> statistics;
     private ArrayList<String> risks;
 
+    public Data inputData = SetupController.getData();
+    private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
     public static String diferentialfilesPath;
 
     public void initialize() {
@@ -43,22 +50,36 @@ public class DifferencialPrivacyController {
 
         // Check what option is selected in toggle group and hide the respective fields
         vary_group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.getUserData().equals("Vary Epsilon")) {
-                minEpsilonField.setVisible(true);
-                maxEpsilonField.setVisible(true);
-                fixedDeltaField.setVisible(true);
-                minDeltaField.setVisible(false);
-                maxDeltaField.setVisible(false);
-                fixedEpsilonField.setVisible(false);
-            } else {
-                minEpsilonField.setVisible(false);
-                maxEpsilonField.setVisible(false);
-                fixedDeltaField.setVisible(false);
-                minDeltaField.setVisible(true);
-                maxDeltaField.setVisible(true);
-                fixedEpsilonField.setVisible(true);
+            if (newValue != null) {
+                RadioButton selectedRadioButton = (RadioButton) newValue;
+                String toggleText = selectedRadioButton.getText(); // Get the text of the selected toggle
+
+                if (toggleText.equals("Vary Epsilon")) {
+                    // Disable epsilon fields, enable delta fields
+                    minEpsilonField.setEditable(true);
+                    maxEpsilonField.setEditable(true);
+                    fixedDeltaField.setEditable(true);
+                    minDeltaField.setEditable(false);
+                    maxDeltaField.setEditable(false);
+                    fixedEpsilonField.setEditable(false);
+                    minDeltaField.clear();
+                    maxDeltaField.clear();
+                    fixedEpsilonField.clear();
+                } else if (toggleText.equals("Vary Delta")) {
+                    // Enable epsilon fields, disable delta fields
+                    minEpsilonField.setEditable(false);
+                    maxEpsilonField.setEditable(false);
+                    fixedDeltaField.setEditable(false);
+                    minEpsilonField.clear();
+                    maxEpsilonField.clear();
+                    fixedDeltaField.clear();
+                    minDeltaField.setEditable(true);
+                    maxDeltaField.setEditable(true);
+                    fixedEpsilonField.setEditable(true);
+                }
             }
         });
+
 
         // Initialize statistics and risks
         statistics = new ArrayList<>();
@@ -67,7 +88,6 @@ public class DifferencialPrivacyController {
 
     public void calculateDifferencialPrivacy() {
         if (vary_group.getSelectedToggle().getUserData().equals("Vary Epsilon")) {
-            // TODO: Vary Epsilon
             // If the textfields are empty, show an error message
             if (minEpsilonField.getText().isEmpty() || maxEpsilonField.getText().isEmpty() || fixedDeltaField.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -96,19 +116,18 @@ public class DifferencialPrivacyController {
             createFolder();
 
             // Insert the header in the statistics array
-            String statsHeader = makeStatisticHeader(); // TODO
+            String statsHeader = makeStatisticHeader();
             statistics.add(statsHeader);
 
             // Insert the header in the risk array
-            String riskHeader = makeRiskHeader(); // TODO
+            String riskHeader = makeRiskHeader();
             risks.add(riskHeader);
 
             for (double epsilon = minEpsilon; epsilon <= maxEpsilon; epsilon += 1) {
-                // anonymizeWithDifferencialPrivacy(epsilon, fixedDelta);
+                anonymizeWithDifferencialPrivacy(inputData, epsilon, fixedDelta);
             }
 
         } else {
-            // TODO: Vary Delta
             // If the textfields are empty, show an error message
             if (minDeltaField.getText().isEmpty() || maxDeltaField.getText().isEmpty() || fixedEpsilonField.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -137,15 +156,15 @@ public class DifferencialPrivacyController {
             createFolder();
 
             // Insert the header in the statistics array
-            String statsHeader = makeStatisticHeader(); // TODO
+            String statsHeader = makeStatisticHeader();
             statistics.add(statsHeader);
 
             // Insert the header in the risk array
-            String riskHeader = makeRiskHeader(); // TODO
+            String riskHeader = makeRiskHeader();
             risks.add(riskHeader);
 
             for (double delta = minDelta; delta <= maxDelta; delta += 0.0001) {
-                // anonymizeWithDifferencialPrivacy(fixedEpsilon, delta);
+                anonymizeWithDifferencialPrivacy(inputData, fixedEpsilon, delta);
             }
         }
 
@@ -157,25 +176,44 @@ public class DifferencialPrivacyController {
         alert.showAndWait();
 
         // Save the statistics and risks in CSV files
-        // saveCSV(statistics, filesPath + "/statistics.csv");
-        // saveCSV(risks, filesPath + "/risks.csv");
+        saveCSV(statistics, diferentialfilesPath + "/diferencial_statistics.csv");
+        saveCSV(risks, diferentialfilesPath + "/diferencial_risks.csv");
 
         // Clear statistics and risks
         statistics.clear();
         risks.clear();
     }
 
-    // TODO: anonymizeWithDifferencialPrivacy(epsilon, fixedDelta)
+    private void anonymizeWithDifferencialPrivacy(Data data, double epsilon, double delta) {
+        ARXAnonymizer anonymizer = new ARXAnonymizer();
+        ARXConfiguration configuration = ARXConfiguration.create();
+        configuration.addPrivacyModel(new EDDifferentialPrivacy(epsilon, delta));
+        configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
+        data.getHandle().release();
+        try {
+            ARXResult result = anonymizer.anonymize(data, configuration);
+            String firstQuasiIdentifier = data.getDefinition().getQuasiIdentifyingAttributes().iterator().next();
+            DataHandle handle = result.getOutput(false);
+            handle.sort(true, data.getHandle().getColumnIndexOf(firstQuasiIdentifier));
+            handle.save(diferentialfilesPath + "/data_differential_epsilon" + epsilon + "_delta" + delta + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
+            StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), epsilon, delta);
+            statistics.add(reviewData.getFullStatisticsDiferencial()); // Save the statistics in the statistics array
+            risks.add(reviewData.getRiskMeasuresDiferencial()); // Save the risks in the risks array
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Dados Anonimizados com sucesso");
+    }
 
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {
-        return "k;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(1) +
+        return "epsilon;delta;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(NUMERO_DE_QUASE_IDENTIFICADORES) +
                 "discernibility;avg. class size;row squared error";
     }
 
     // Function to create the header of the CSV file (risk.csv)
     public String makeRiskHeader() {
-        return "k;prosecutor risk;journalist risk;marketer risk";
+        return "epsilon;delta;prosecutor risk;journalist risk;marketer risk";
     }
 
     // Function that opens file explorer to create a new folder and save path in filePath variable
@@ -184,6 +222,24 @@ public class DifferencialPrivacyController {
         File selectedDirectory = directoryChooser.showDialog(tableBox.getScene().getWindow());
         if (selectedDirectory != null) {
             diferentialfilesPath = selectedDirectory.getAbsolutePath();
+        }
+    }
+
+    // Function that given a bidimensional array of strings, save in a CSV file
+    public void saveCSV(ArrayList<String> data, String path) {
+        File file = new File(path);
+        try {
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            for (String row : data) {
+                bw.write(row);
+                bw.newLine();
+            }
+
+            bw.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar arquivo CSV");
         }
     }
 }

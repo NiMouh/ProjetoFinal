@@ -26,57 +26,56 @@
       <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
    </ScrollPane>
    <VBox alignment="CENTER" AnchorPane.leftAnchor="65.0" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="360.0">
-      <children>
-         <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
-            <RadioButton mnemonicParsing="false" selected="true" text="Vary Epsilon" textFill="WHITE">
-               <HBox.margin>
-                  <Insets right="5.0" />
-               </HBox.margin>
-               <toggleGroup>
-                  <ToggleGroup fx:id="vary_group" />
-               </toggleGroup>
-            </RadioButton>
-            <TextField fx:id="minEpsilonField" promptText="Min Epsilon Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </TextField>
-            <TextField fx:id="maxEpsilonField" promptText="Max Epsilon Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </TextField>
-            <TextField fx:id="fixedDeltaField" promptText="Fixed Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;" />
-         </HBox>
-         <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
-            <children>
-               <RadioButton mnemonicParsing="false" text="Vary Delta" textFill="WHITE" toggleGroup="$vary_group">
-                  <HBox.margin>
-                     <Insets right="15.0" />
-                  </HBox.margin>
-               </RadioButton>
-               <TextField fx:id="minDeltaField" promptText="Min Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
-                  <HBox.margin>
-                     <Insets right="10.0" />
-                  </HBox.margin>
-               </TextField>
-               <TextField fx:id="maxDeltaField" promptText="Max Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
-                  <HBox.margin>
-                     <Insets right="10.0" />
-                  </HBox.margin>
-               </TextField>
-               <TextField fx:id="fixedEpsilonField" promptText="Fixed Epsilon Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
-                  <HBox.margin>
-                     <Insets />
-                  </HBox.margin>
-               </TextField>
-            </children>
-         </HBox>
-         <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#calculateDifferencialPrivacy" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #6794B5; -fx-border-radius: 5px;" text="Anonimyze with DP" textFill="WHITE">
-            <font>
-               <Font size="16.0" />
-            </font>
-         </Button>
-      </children>
+      <HBox alignment="CENTER">
+         <RadioButton mnemonicParsing="false" selected="true" text="Vary Epsilon" textFill="WHITE">
+            <HBox.margin>
+               <Insets right="5.0" />
+            </HBox.margin>
+            <toggleGroup>
+               <ToggleGroup fx:id="vary_group" />
+            </toggleGroup>
+         </RadioButton>
+         <TextField fx:id="minEpsilonField" promptText="Min Epsilon Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin>
+         </TextField>
+         <TextField fx:id="maxEpsilonField" promptText="Max Epsilon Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin>
+         </TextField>
+         <TextField fx:id="fixedDeltaField" promptText="Fixed Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;" />
+         <VBox.margin>
+            <Insets bottom="5.0" top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
+         <RadioButton mnemonicParsing="false" text="Vary Delta" textFill="WHITE" toggleGroup="$vary_group">
+            <HBox.margin>
+               <Insets right="15.0" />
+            </HBox.margin>
+         </RadioButton>
+         <TextField fx:id="minDeltaField" editable="false" promptText="Min Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin>
+         </TextField>
+         <TextField fx:id="maxDeltaField" editable="false" promptText="Max Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin>
+         </TextField>
+         <TextField fx:id="fixedEpsilonField" editable="false" promptText="Fixed Epsilon Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+         </TextField>
+      </HBox>
+      <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#calculateDifferencialPrivacy" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #6794B5; -fx-border-radius: 5px;" text="Anonimyze with DP" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
    </VBox>
 </AnchorPane>

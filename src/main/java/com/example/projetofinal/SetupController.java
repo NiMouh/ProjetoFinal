@@ -142,7 +142,6 @@ public class SetupController {
     protected void importData(String filePath) {
         try {
             inputData = Data.create(filePath, Charset.defaultCharset(), delimiter);
-            System.out.println(inputData);
             setupButtonContainer.getChildren().clear();
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

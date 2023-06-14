@@ -68,26 +68,28 @@
                         <Font name="Segoe UI Semibold" size="20.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <RadioButton mnemonicParsing="false" selected="true" style="-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px;" text="CSV" textFill="WHITE">
-                           <font>
-                              <Font name="Yu Gothic Medium" size="13.0" />
-                           </font>
-                           <toggleGroup>
-                              <ToggleGroup fx:id="format_group" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <RadioButton mnemonicParsing="false" style="-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px;" text="Excel" textFill="WHITE" toggleGroup="$format_group">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                        </RadioButton>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="5.0" />
-                     </VBox.margin>
-                  </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                            <VBox.margin>
+                                <Insets bottom="5.0"/>
+                            </VBox.margin>
+                            <RadioButton mnemonicParsing="false" selected="true"
+                                         style="-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px;"
+                                         text="CSV" textFill="WHITE">
+                                <font>
+                                    <Font name="Yu Gothic Medium" size="13.0"/>
+                                </font>
+                                <toggleGroup>
+                                    <ToggleGroup fx:id="format_group"/>
+                                </toggleGroup>
+                            </RadioButton>
+                            <RadioButton mnemonicParsing="false"
+                                         style="-fx-background-color: #29273D; -fx-padding: 10px; -fx-border-insets: 5px; -fx-background-insets: 5px; -fx-background-radius: 5px;"
+                                         text="Excel" textFill="WHITE" toggleGroup="$format_group">
+                                <font>
+                                    <Font size="13.0"/>
+                                </font>
+                            </RadioButton>
+                        </HBox>
                         <Label text="Choose delimiter:" textFill="WHITE">
                             <font>
                                 <Font name="Segoe UI Semibold" size="20.0" />

@@ -11,7 +11,9 @@ public class StatisticsAnonimizedData {
 
     private final DataHandle handlerData;
     private final StatisticsBuilder statisticsBuilder;
-    private final int kValue;
+    private int kValue;
+    private double epsilon;
+    private double delta;
 
     public StatisticsAnonimizedData(DataHandle data, int kValue) {
         this.handlerData = data;
@@ -19,13 +21,25 @@ public class StatisticsAnonimizedData {
         this.kValue = kValue;
     }
 
+    public StatisticsAnonimizedData(DataHandle data, double epsilon, double delta) {
+        this.handlerData = data;
+        this.statisticsBuilder = handlerData.getStatistics();
+        this.epsilon = epsilon;
+        this.delta = delta;
+    }
+
     // TODO: Criar condição para caso o handle for nulo, devolver uma linha vazia
     public String emptyLineStats() {
-        return ";" + ";" + ";".repeat(4 * handlerData.getDefinition().getQuasiIdentifyingAttributes().size() + 3);
+        String result = ";" + ";";
+        for (int index = 0; index < handlerData.getDefinition().getQuasiIdentifyingAttributes().size(); index++) {
+            result = result.concat(";;;; ;");
+        }
+        result = result.concat(";;;");
+        return result;
     }
 
     public String emptyLineRisk() {
-        return ";" + ";".repeat(3);
+        return ";".repeat(4);
     }
 
     // Function that returns the number of rows in the dataset without considering the suppressed data
@@ -71,6 +85,14 @@ public class StatisticsAnonimizedData {
         return kValue + ";";
     }
 
+    public String getEpsilonValue() {
+        return epsilon + ";";
+    }
+
+    public String getDeltaValue() {
+        return delta + ";";
+    }
+
     // Function that returns a String with the risk measures
     public String getRiskMeasures() {
         if (handlerData == null) return emptyLineRisk();
@@ -90,6 +112,25 @@ public class StatisticsAnonimizedData {
         if (handlerData == null) return emptyLineStats();
 
         return getKValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();
+    }
+
+    public String getRiskMeasuresDiferencial(){
+        if (handlerData == null) return ";" + emptyLineRisk();
+
+        RiskEstimateBuilder estimate = handlerData.getRiskEstimator();
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
+        double prosecutorRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedProsecutorRisk() * 100;
+        double journalistRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedJournalistRisk() * 100;
+        double marketerRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedMarketerRisk() * 100;
+
+        // Return  the K value and the risk measures (they should be in % with 2 decimal places)
+        return getEpsilonValue() + getDeltaValue() + decimalFormat.format(prosecutorRisk) + ";" + decimalFormat.format(journalistRisk) + ";" + decimalFormat.format(marketerRisk) + ";";
+    }
+
+    public String getFullStatisticsDiferencial(){
+        if (handlerData == null) return ";" + emptyLineStats();
+
+        return getEpsilonValue() + getDeltaValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();
     }
 
 }
