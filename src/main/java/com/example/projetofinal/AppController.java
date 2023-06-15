@@ -112,11 +112,6 @@ public class AppController {
         mainPage.setCenter(homeContent);
     }
 
-    // Function that changes the page to the differencial privacy page
-    public void viewDifferencialPrivacy() {
-        loadPage("differencial-privacy-screen");
-    }
-
     // Function that changes the page to the hierarchy page
     public void viewHieararchy() {
         loadPage("hierarchy-screen");
@@ -130,6 +125,21 @@ public class AppController {
     // Function that changes the page to the risks page
     public void viewRisks() {
         loadPage("risk-screen");
+    }
+
+    // Function that changes the page to the differencial privacy page
+    public void viewDifferencialPrivacy() {
+        loadPage("differencial-privacy-screen");
+    }
+
+    // Function that changes the page to the differencial statistics page
+    public void viewDifferencialStatistics() {
+        loadPage("differencial-statistics-screen");
+    }
+
+    // Function that changes the page to the differencial risks page
+    public void viewDifferencialRisks() {
+        loadPage("differencial-risk-screen");
     }
 
     // Function that given a page name, loads the page section
@@ -205,7 +215,7 @@ public class AppController {
         ARXAnonymizer anonymizer = new ARXAnonymizer();
         ARXConfiguration configuration = ARXConfiguration.create();
         configuration.addPrivacyModel(new KAnonymity(valorK));
-        configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
+        configuration.setSuppressionLimit(1); // 100% de linhas suprimidas
         dados.getHandle().release();
         try {
             ARXResult result = anonymizer.anonymize(dados, configuration);

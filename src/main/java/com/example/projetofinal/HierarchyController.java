@@ -37,7 +37,7 @@ public class HierarchyController {
             Label attributeLabel = new Label(attribute);
             attributeLabel.setStyle("-fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;-fx-alignment: center;-fx-padding: 15px 5px 15px 5px;");
             column.getChildren().add(attributeLabel);
-            Button importHierarchy = new Button("Importar Hierarquia");
+            Button importHierarchy = new Button("Import Hierarchy");
             importHierarchy.setStyle("-fx-text-fill: white; -fx-background-color: #6794B5;-fx-padding: 5px 10px 5px 10px;");
             importHierarchy.setOnMouseClicked(e -> importHierarchy(attribute));
             column.getChildren().add(importHierarchy);

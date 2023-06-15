@@ -20,7 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 
-public class RiskController {
+public class DifferencialRiskController {
 
     @FXML
     private TableView<String[]> inputTable;
@@ -34,7 +34,7 @@ public class RiskController {
     final FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
-        ObservableList<String[]> data = readCSV(AppController.filesPath + "/risks.csv");
+        ObservableList<String[]> data = readCSV(AppController.filesPath + "/differencial_risks.csv");
 
         if (data == null) { // If it's null, it will hide the table and show a message
             tableBox.setVisible(false);
@@ -63,9 +63,7 @@ public class RiskController {
 
     // Shows the risks UI
     public void risksWindow(ObservableList<String[]> data) {
-        if (data == null) {
-            return;
-        }
+        if (data == null) return;
 
         // Clear existing columns
         inputTable.getColumns().clear();

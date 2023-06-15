@@ -25,7 +25,7 @@
    <ScrollPane fx:id="tableBox" hbarPolicy="NEVER" layoutX="35.0" layoutY="142.0" prefHeight="300.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-fit-to-width: true;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
       <TableView fx:id="inputTable" style="-fx-background-color: #232132;" />
    </ScrollPane>
-   <VBox alignment="CENTER" AnchorPane.leftAnchor="65.0" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="360.0">
+   <VBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0">
       <HBox alignment="CENTER">
          <RadioButton mnemonicParsing="false" selected="true" text="Vary Epsilon" textFill="WHITE">
             <HBox.margin>
@@ -45,12 +45,17 @@
                <Insets right="10.0" />
             </HBox.margin>
          </TextField>
+         <TextField fx:id="stepEpsilonField" promptText="Step Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin>
+         </TextField>
          <TextField fx:id="fixedDeltaField" promptText="Fixed Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;" />
          <VBox.margin>
             <Insets bottom="5.0" top="10.0" />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
+      <HBox alignment="CENTER" prefHeight="50.0">
          <RadioButton mnemonicParsing="false" text="Vary Delta" textFill="WHITE" toggleGroup="$vary_group">
             <HBox.margin>
                <Insets right="15.0" />
@@ -62,6 +67,11 @@
             </HBox.margin>
          </TextField>
          <TextField fx:id="maxDeltaField" editable="false" promptText="Max Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin>
+         </TextField>
+         <TextField fx:id="stepDeltaField" promptText="Step Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
             <HBox.margin>
                <Insets right="10.0" />
             </HBox.margin>

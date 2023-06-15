@@ -14,13 +14,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 
-public class RiskController {
+public class DifferencialStatisticsController {
 
     @FXML
     private TableView<String[]> inputTable;
@@ -34,7 +32,7 @@ public class RiskController {
     final FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
-        ObservableList<String[]> data = readCSV(AppController.filesPath + "/risks.csv");
+        ObservableList<String[]> data = readCSV(AppController.filesPath + "/diferencial_statistics.csv");
 
         if (data == null) { // If it's null, it will hide the table and show a message
             tableBox.setVisible(false);
@@ -42,7 +40,7 @@ public class RiskController {
         } else { // If it's not null, it will show the table and show the statistics
             tableBox.setVisible(true);
             messageBox.setVisible(false);
-            risksWindow(data);
+            statisticsWindow(data);
         }
 
         searchStats.setOnAction(event -> {
@@ -51,7 +49,7 @@ public class RiskController {
                 tableBox.setVisible(true);
                 messageBox.setVisible(false);
                 ObservableList<String[]> searched = readCSV(file.getAbsolutePath());
-                risksWindow(searched);
+                statisticsWindow(searched);
             }
         });
 
@@ -61,11 +59,9 @@ public class RiskController {
         inputTable.prefHeightProperty().bind(tableBox.heightProperty());
     }
 
-    // Shows the risks UI
-    public void risksWindow(ObservableList<String[]> data) {
-        if (data == null) {
-            return;
-        }
+    // Shows the statistics UI
+    public void statisticsWindow(ObservableList<String[]> data) {
+        if (data == null) return;
 
         // Clear existing columns
         inputTable.getColumns().clear();
@@ -97,7 +93,7 @@ public class RiskController {
                     }
                 }
             });
-            column.setStyle("-fx-background-color:#FFFFFF;");
+            column.setStyle("-fx-background-color: #FFFFFF;");
             inputTable.getColumns().add(column);
         }
 
@@ -105,7 +101,7 @@ public class RiskController {
         inputTable.setItems(data);
     }
 
-    // Reads a CSV file and returns the data as an ObservableList
+    // Reads the CSV file and returns the data
     public ObservableList<String[]> readCSV(String path) {
         ObservableList<String[]> data = FXCollections.observableArrayList();
         try {
@@ -121,7 +117,7 @@ public class RiskController {
             // Catch any other unexpected exceptions
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setHeaderText("Unexpected error");
+            alert.setHeaderText("An error occurred while reading the file");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
             return null;
@@ -129,3 +125,4 @@ public class RiskController {
         return data;
     }
 }
+

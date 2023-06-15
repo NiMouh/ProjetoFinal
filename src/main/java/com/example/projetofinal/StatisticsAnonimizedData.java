@@ -6,6 +6,7 @@ import org.deidentifier.arx.aggregates.quality.QualityMeasureColumnOriented;
 import org.deidentifier.arx.risk.RiskEstimateBuilder;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 public class StatisticsAnonimizedData {
 
@@ -30,7 +31,7 @@ public class StatisticsAnonimizedData {
 
     // TODO: Criar condição para caso o handle for nulo, devolver uma linha vazia
     public String emptyLineStats() {
-        String result = ";" + ";";
+        String result = ";";
         for (int index = 0; index < handlerData.getDefinition().getQuasiIdentifyingAttributes().size(); index++) {
             result = result.concat(";;;; ;");
         }
@@ -55,7 +56,10 @@ public class StatisticsAnonimizedData {
 
     // Function that receives the array of quasi-identifiers and returns a String with the column oriented measures
     public String getQualityAttributes() {
-        DecimalFormat decimalFormat = new DecimalFormat("0.000");
+        DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+        decimalFormatSymbols.setDecimalSeparator('.');
+        DecimalFormat decimalFormat = new DecimalFormat("0.000", decimalFormatSymbols);
+
         QualityMeasureColumnOriented generalizationIntensity = statisticsBuilder.getQualityStatistics().getGeneralizationIntensity();
         QualityMeasureColumnOriented missings = statisticsBuilder.getQualityStatistics().getMissings();
         QualityMeasureColumnOriented entropy = statisticsBuilder.getQualityStatistics().getNonUniformEntropy();
@@ -72,7 +76,10 @@ public class StatisticsAnonimizedData {
 
     // Function that returns a String with the row oriented measures
     public String getQualityRecords() {
-        DecimalFormat decimalFormat = new DecimalFormat("0.000");
+        DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+        decimalFormatSymbols.setDecimalSeparator('.');
+        DecimalFormat decimalFormat = new DecimalFormat("0.000", decimalFormatSymbols);
+
         double discernibility = statisticsBuilder.getQualityStatistics().getDiscernibility().getValue() * 100;
         double averageClassSize = statisticsBuilder.getQualityStatistics().getAverageClassSize().getValue() * 100;
         double squaredError = statisticsBuilder.getQualityStatistics().getRecordLevelSquaredError().getValue() * 100;
@@ -95,10 +102,13 @@ public class StatisticsAnonimizedData {
 
     // Function that returns a String with the risk measures
     public String getRiskMeasures() {
-        if (handlerData == null) return emptyLineRisk();
+        if (handlerData == null) return getKValue() + emptyLineRisk();
+
+        DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+        decimalFormatSymbols.setDecimalSeparator('.');
+        DecimalFormat decimalFormat = new DecimalFormat("0.000", decimalFormatSymbols);
 
         RiskEstimateBuilder estimate = handlerData.getRiskEstimator();
-        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         double prosecutorRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedProsecutorRisk() * 100;
         double journalistRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedJournalistRisk() * 100;
         double marketerRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedMarketerRisk() * 100;
@@ -109,16 +119,19 @@ public class StatisticsAnonimizedData {
 
     // Function that returns a String with all the statistics
     public String getFullStatistics() {
-        if (handlerData == null) return emptyLineStats();
+        if (handlerData == null) return getKValue() + emptyLineStats();
 
         return getKValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();
     }
 
     public String getRiskMeasuresDiferencial(){
-        if (handlerData == null) return ";" + emptyLineRisk();
+        if (handlerData == null) return getEpsilonValue() + getDeltaValue() + emptyLineRisk();
+
+        DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+        decimalFormatSymbols.setDecimalSeparator('.');
+        DecimalFormat decimalFormat = new DecimalFormat("0.000", decimalFormatSymbols);
 
         RiskEstimateBuilder estimate = handlerData.getRiskEstimator();
-        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         double prosecutorRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedProsecutorRisk() * 100;
         double journalistRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedJournalistRisk() * 100;
         double marketerRisk = estimate.getSampleBasedReidentificationRisk().getEstimatedMarketerRisk() * 100;
@@ -128,7 +141,7 @@ public class StatisticsAnonimizedData {
     }
 
     public String getFullStatisticsDiferencial(){
-        if (handlerData == null) return ";" + emptyLineStats();
+        if (handlerData == null) return getEpsilonValue() + getDeltaValue() + emptyLineStats();
 
         return getEpsilonValue() + getDeltaValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();
     }

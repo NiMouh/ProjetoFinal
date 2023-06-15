@@ -20,7 +20,7 @@ public class DifferencialPrivacyController {
     private ScrollPane tableBox;
 
     @FXML
-    private TextField minEpsilonField, maxEpsilonField, fixedDeltaField, minDeltaField, maxDeltaField, fixedEpsilonField;
+    private TextField minEpsilonField, maxEpsilonField, fixedDeltaField, minDeltaField, stepDeltaField, stepEpsilonField, maxDeltaField, fixedEpsilonField;
 
     public ToggleGroup vary_group;
     private ArrayList<String> statistics;
@@ -32,12 +32,14 @@ public class DifferencialPrivacyController {
 
     public void initialize() {
         // Only allow numbers to be typed in the epsilonField and deltaField text fields
-        minEpsilonField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
-        maxEpsilonField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
-        fixedDeltaField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
-        minDeltaField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
-        maxDeltaField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
-        fixedEpsilonField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null));
+        minEpsilonField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
+        maxEpsilonField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
+        fixedDeltaField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
+        stepEpsilonField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
+        minDeltaField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
+        maxDeltaField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
+        fixedEpsilonField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
+        stepDeltaField.setTextFormatter(new TextFormatter<>(change -> change.getControlNewText().matches("\\d*\\.?\\d*") ? change : null));
 
         // Table Configuration
         inputTable.setEditable(true);
@@ -59,23 +61,28 @@ public class DifferencialPrivacyController {
                     minEpsilonField.setEditable(true);
                     maxEpsilonField.setEditable(true);
                     fixedDeltaField.setEditable(true);
+                    stepEpsilonField.setEditable(true);
                     minDeltaField.setEditable(false);
                     maxDeltaField.setEditable(false);
                     fixedEpsilonField.setEditable(false);
                     minDeltaField.clear();
                     maxDeltaField.clear();
                     fixedEpsilonField.clear();
+                    stepDeltaField.clear();
                 } else if (toggleText.equals("Vary Delta")) {
                     // Enable epsilon fields, disable delta fields
                     minEpsilonField.setEditable(false);
                     maxEpsilonField.setEditable(false);
                     fixedDeltaField.setEditable(false);
+                    stepEpsilonField.setEditable(false);
                     minEpsilonField.clear();
                     maxEpsilonField.clear();
                     fixedDeltaField.clear();
+                    stepEpsilonField.clear();
                     minDeltaField.setEditable(true);
                     maxDeltaField.setEditable(true);
                     fixedEpsilonField.setEditable(true);
+                    stepDeltaField.setEditable(true);
                 }
             }
         });
@@ -87,9 +94,11 @@ public class DifferencialPrivacyController {
     }
 
     public void calculateDifferencialPrivacy() {
-        if (vary_group.getSelectedToggle().getUserData().equals("Vary Epsilon")) {
+        RadioButton selectedRadioButton = (RadioButton) vary_group.getSelectedToggle();
+        String selectedText = selectedRadioButton.getText();
+        if (selectedText.equals("Vary Epsilon")) {
             // If the textfields are empty, show an error message
-            if (minEpsilonField.getText().isEmpty() || maxEpsilonField.getText().isEmpty() || fixedDeltaField.getText().isEmpty()) {
+            if (minEpsilonField.getText().isEmpty() || maxEpsilonField.getText().isEmpty() || fixedDeltaField.getText().isEmpty() || stepEpsilonField.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Empty Fields");
@@ -101,9 +110,10 @@ public class DifferencialPrivacyController {
             double minEpsilon = Double.parseDouble(minEpsilonField.getText());
             double maxEpsilon = Double.parseDouble(maxEpsilonField.getText());
             double fixedDelta = Double.parseDouble(fixedDeltaField.getText());
+            double stepEpsilon = Double.parseDouble(stepEpsilonField.getText());
 
             // If the values are invalid, show an error message
-            if (minEpsilon > maxEpsilon || minEpsilon < 0.01 || maxEpsilon > 10 || fixedDelta > 0.01 || fixedDelta < 0.00001) {
+            if (minEpsilon > maxEpsilon || minEpsilon < 0.01 || maxEpsilon > 10 || fixedDelta > 0.01 || fixedDelta < 0.00001|| stepEpsilon > maxEpsilon) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Invalid Values");
@@ -123,13 +133,13 @@ public class DifferencialPrivacyController {
             String riskHeader = makeRiskHeader();
             risks.add(riskHeader);
 
-            for (double epsilon = minEpsilon; epsilon <= maxEpsilon; epsilon += 1) {
+            for (double epsilon = minEpsilon; epsilon <= maxEpsilon; epsilon += stepEpsilon) {
                 anonymizeWithDifferencialPrivacy(inputData, epsilon, fixedDelta);
             }
 
         } else {
             // If the textfields are empty, show an error message
-            if (minDeltaField.getText().isEmpty() || maxDeltaField.getText().isEmpty() || fixedEpsilonField.getText().isEmpty()) {
+            if (minDeltaField.getText().isEmpty() || maxDeltaField.getText().isEmpty() || fixedEpsilonField.getText().isEmpty() || stepDeltaField.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Empty Fields");
@@ -141,9 +151,10 @@ public class DifferencialPrivacyController {
             double minDelta = Double.parseDouble(minDeltaField.getText());
             double maxDelta = Double.parseDouble(maxDeltaField.getText());
             double fixedEpsilon = Double.parseDouble(fixedEpsilonField.getText());
+            double stepDelta = Double.parseDouble(stepDeltaField.getText());
 
             // If the values are invalid, show an error message
-            if (minDelta > maxDelta || minDelta < 0.00001 || maxDelta > 0.01 || fixedEpsilon > 10 || fixedEpsilon < 0.01) {
+            if (minDelta > maxDelta || minDelta < 0.00001 || maxDelta > 0.01 || fixedEpsilon > 10 || fixedEpsilon < 0.01 || stepDelta > maxDelta) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Invalid Values");
@@ -163,7 +174,7 @@ public class DifferencialPrivacyController {
             String riskHeader = makeRiskHeader();
             risks.add(riskHeader);
 
-            for (double delta = minDelta; delta <= maxDelta; delta += 0.0001) {
+            for (double delta = minDelta; delta <= maxDelta; delta += stepDelta) {
                 anonymizeWithDifferencialPrivacy(inputData, fixedEpsilon, delta);
             }
         }
@@ -188,7 +199,8 @@ public class DifferencialPrivacyController {
         ARXAnonymizer anonymizer = new ARXAnonymizer();
         ARXConfiguration configuration = ARXConfiguration.create();
         configuration.addPrivacyModel(new EDDifferentialPrivacy(epsilon, delta));
-        configuration.setSuppressionLimit(0.01d); // 1% de linhas suprimidas
+        configuration.setHeuristicSearchStepLimit(1000); // Limit the number of iterations
+        configuration.setSuppressionLimit(1); // 100% de linhas suprimidas
         data.getHandle().release();
         try {
             ARXResult result = anonymizer.anonymize(data, configuration);
