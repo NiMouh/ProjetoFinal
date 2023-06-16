@@ -32,7 +32,7 @@ public class DifferencialStatisticsController {
     final FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
-        ObservableList<String[]> data = readCSV(AppController.filesPath + "/diferencial_statistics.csv");
+        ObservableList<String[]> data = readCSV(DifferencialPrivacyController.diferentialfilesPath + "/diferencial_statistics.csv");
 
         if (data == null) { // If it's null, it will hide the table and show a message
             tableBox.setVisible(false);

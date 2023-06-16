@@ -16,14 +16,14 @@
 
 <BorderPane fx:id="mainPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #343248;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projetofinal.AppController">
    <left>
-      <VBox prefHeight="557.0" prefWidth="236.0" style="-fx-background-color: #343248;" BorderPane.alignment="CENTER">
+      <VBox fx:id="navigationBar" prefHeight="557.0" prefWidth="236.0" style="-fx-background-color: #343248;" BorderPane.alignment="CENTER">
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
          <VBox alignment="CENTER">
             <Label text="GENERAL" textFill="#ababab">
                <font>
-                  <Font size="14.0"/>
+                  <Font size="14.0" />
                </font>
             </Label>
          </VBox>
@@ -56,7 +56,7 @@
          <VBox alignment="CENTER">
             <Label text="K-ANONYMITY" textFill="#ababab">
                <font>
-                  <Font size="14.0"/>
+                  <Font size="14.0" />
                </font>
             </Label>
          </VBox>
@@ -102,7 +102,7 @@
          <VBox alignment="CENTER">
             <Label text="DIFFERENCIAL PRIVACY" textFill="#ababab">
                <font>
-                  <Font size="14.0"/>
+                  <Font size="14.0" />
                </font>
             </Label>
          </VBox>
@@ -119,30 +119,26 @@
                </cursor>
             </Button>
          </VBox>
-         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0"
-               style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
+         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
             <VBox.margin>
-               <Insets bottom="15.0"/>
+               <Insets bottom="15.0" />
             </VBox.margin>
-            <Button mnemonicParsing="false" onMouseClicked="#viewDifferencialStatistics" style="-fx-background-color: none;"
-                    text="Statistics" textFill="WHITE">
+            <Button mnemonicParsing="false" onMouseClicked="#viewDifferencialStatistics" style="-fx-background-color: none;" text="Statistics" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="13.0"/>
+                  <Font name="System Bold" size="13.0" />
                </font>
                <cursor>
-                  <Cursor fx:constant="HAND"/>
+                  <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
          </VBox>
-         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0"
-               style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
-            <Button mnemonicParsing="false" onMouseClicked="#viewDifferencialRisks" style="-fx-background-color: none;"
-                    text="Risk" textFill="WHITE">
+         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="176.0" style="-fx-border-color: #878787; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 1px;">
+            <Button mnemonicParsing="false" onMouseClicked="#viewDifferencialRisks" style="-fx-background-color: none;" text="Risk" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="13.0"/>
+                  <Font name="System Bold" size="13.0" />
                </font>
                <cursor>
-                  <Cursor fx:constant="HAND"/>
+                  <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
          </VBox>
@@ -195,7 +191,7 @@
          </right>
          <left>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <Button mnemonicParsing="false" style="-fx-background-color: none;" textFill="WHITE">
+               <Button mnemonicParsing="false" onMouseClicked="#handleBurgerMenu" style="-fx-background-color: none;" textFill="WHITE">
                   <graphic>
                      <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="@img/menu-btn.png" />

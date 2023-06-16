@@ -254,6 +254,14 @@ public class SetupController {
                 inputData.getDefinition().setAttributeType(inputData.getHandle().getAttributeName(indexColuna), AttributeType.QUASI_IDENTIFYING_ATTRIBUTE);
             }
         }
+        if (!inputData.getDefinition().getQuasiIdentifyingAttributes().iterator().hasNext()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText("No quasi-identifying attributes");
+            alert.setContentText("At least one column should be defined as quasi-identifying");
+            alert.showAndWait();
+            return;
+        }
 
         // Function that opens the new window
         try {

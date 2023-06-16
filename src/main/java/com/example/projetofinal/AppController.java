@@ -5,6 +5,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.deidentifier.arx.*;
 import org.deidentifier.arx.criteria.KAnonymity;
 
@@ -30,7 +32,7 @@ public class AppController {
     @FXML
     private BorderPane mainPage;
     @FXML
-    private VBox homeContent;
+    private VBox homeContent,navigationBar;
     @FXML
     private TextField kMin, kStep, kMax;
     @FXML
@@ -150,6 +152,25 @@ public class AppController {
         } catch (IOException e) {
             System.out.println("Não foi possível carregar a página " + page);
         }
+    }
+
+    // Function that handles the burger menu
+    public void handleBurgerMenu() {
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.3), navigationBar);
+
+        if (navigationBar.isVisible()) {
+            transition.setToX(-navigationBar.getWidth());
+            transition.setOnFinished(event -> {
+                navigationBar.setVisible(false);
+                navigationBar.setManaged(false);
+            });
+        } else {
+            navigationBar.setVisible(true);
+            navigationBar.setManaged(true);
+            transition.setToX(0);
+        }
+
+        transition.play();
     }
 
     // Function to calculate the K-Anonymity given the values of kMin, kMax and kStep
