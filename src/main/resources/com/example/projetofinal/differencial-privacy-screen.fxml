@@ -15,9 +15,9 @@
 
 <AnchorPane style="-fx-background-color: #29273D;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projetofinal.DifferencialPrivacyController">
    <padding>
-      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
-   <Label alignment="CENTER" layoutX="71.0" layoutY="22.0" text="Inserted Data" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="41.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="0.0">
+   <Label alignment="CENTER" layoutX="71.0" layoutY="22.0" text="Inserted Data" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <font>
          <Font name="Segoe UI Semibold" size="25.0" />
       </font>
