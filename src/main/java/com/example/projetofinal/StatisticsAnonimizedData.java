@@ -29,7 +29,6 @@ public class StatisticsAnonimizedData {
         this.delta = delta;
     }
 
-    // TODO: Criar condição para caso o handle for nulo, devolver uma linha vazia
     public String emptyLineStats() {
         String result = ";";
         for (int index = 0; index < handlerData.getDefinition().getQuasiIdentifyingAttributes().size(); index++) {
@@ -40,7 +39,7 @@ public class StatisticsAnonimizedData {
     }
 
     public String emptyLineRisk() {
-        return ";".repeat(4);
+        return ";".repeat(3);
     }
 
     // Function that returns the number of rows in the dataset without considering the suppressed data
@@ -124,7 +123,7 @@ public class StatisticsAnonimizedData {
         return getKValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();
     }
 
-    public String getRiskMeasuresDiferencial(){
+    public String getRiskMeasuresDiferencial() {
         if (handlerData == null) return getEpsilonValue() + getDeltaValue() + emptyLineRisk();
 
         DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
@@ -140,7 +139,7 @@ public class StatisticsAnonimizedData {
         return getEpsilonValue() + getDeltaValue() + decimalFormat.format(prosecutorRisk) + ";" + decimalFormat.format(journalistRisk) + ";" + decimalFormat.format(marketerRisk) + ";";
     }
 
-    public String getFullStatisticsDiferencial(){
+    public String getFullStatisticsDiferencial() {
         if (handlerData == null) return getEpsilonValue() + getDeltaValue() + emptyLineStats();
 
         return getEpsilonValue() + getDeltaValue() + getSupressedData() + getQualityAttributes() + getQualityRecords();

@@ -44,7 +44,7 @@ public class SetupController {
     public static char delimiter;
 
     private static final String[] attributeTypes = {"Identifying", "Sensitive", "Not Sensitive", "Quasi-identifying", "Suppressed"};
-    private static final int NUMERO_TIPOS = 5;
+    private static final int NUMBER_OF_ATTRIBUTE_TYPES = 5;
 
     public void initialize() {
         delimiter = ';';
@@ -158,7 +158,7 @@ public class SetupController {
         setupButton.setText("CONTINUE");
         int numeroColunas = inputData.getHandle().getNumColumns();
         setupButtonContainer.setSpacing(5);
-        setupButtons = new RadioButton[numeroColunas][NUMERO_TIPOS];
+        setupButtons = new RadioButton[numeroColunas][NUMBER_OF_ATTRIBUTE_TYPES];
         for (int indexColuna = 0; indexColuna < numeroColunas; indexColuna++) {
             Label columnName = new Label(inputData.getHandle().getAttributeName(indexColuna));
             columnName.setStyle("-fx-text-fill: #FFFFFF; -fx-font-family: 'Yu Gothic Medium'; -fx-font-size: 13px; -fx-pref-width: 100px;-fx-alignment: center;");
@@ -168,7 +168,7 @@ public class SetupController {
 
             HBox.setHgrow(dataTypeColumn, Priority.ALWAYS);
             ToggleGroup buttonGroup = new ToggleGroup();
-            for (int indexTipo = 0; indexTipo < NUMERO_TIPOS; indexTipo++) {
+            for (int indexTipo = 0; indexTipo < NUMBER_OF_ATTRIBUTE_TYPES; indexTipo++) {
                 RadioButton button = createRadioButton(dataTypes[indexTipo], buttonGroup);
                 setupButtons[indexColuna][indexTipo] = button;
                 dataTypeColumn.getChildren().add(button);
@@ -225,7 +225,7 @@ public class SetupController {
     protected void attributeTypeWindow() {
         setupTitle.setText("Attribute Types");
         setupButton.setText("ACCEPT");
-        IntStream.range(0, inputData.getHandle().getNumColumns()).forEach(indexColuna -> IntStream.range(0, NUMERO_TIPOS).forEach(indexTipo -> {
+        IntStream.range(0, inputData.getHandle().getNumColumns()).forEach(indexColuna -> IntStream.range(0, NUMBER_OF_ATTRIBUTE_TYPES).forEach(indexTipo -> {
             setupButtons[indexColuna][indexTipo].setSelected(false);
             setupButtons[indexColuna][indexTipo].setText(attributeTypes[indexTipo]);
         }));

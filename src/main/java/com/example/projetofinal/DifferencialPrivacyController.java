@@ -27,7 +27,7 @@ public class DifferencialPrivacyController {
     private ArrayList<String> risks;
 
     public Data inputData = SetupController.getData();
-    private final int NUMERO_DE_QUASE_IDENTIFICADORES = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
+    private final int NUMBER_OF_QUASE_IDENTIFIERS = inputData.getDefinition().getQuasiIdentifyingAttributes().size();
     public static String diferentialfilesPath;
 
     public void initialize() {
@@ -206,20 +206,21 @@ public class DifferencialPrivacyController {
             ARXResult result = anonymizer.anonymize(data, configuration);
             String firstQuasiIdentifier = data.getDefinition().getQuasiIdentifyingAttributes().iterator().next();
             DataHandle handle = result.getOutput(false);
-            handle.sort(true, data.getHandle().getColumnIndexOf(firstQuasiIdentifier));
-            handle.save(diferentialfilesPath + "/data_differential_epsilon" + epsilon + "_delta" + delta + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
+            if (handle != null){
+                handle.sort(true, data.getHandle().getColumnIndexOf(firstQuasiIdentifier));
+                handle.save(diferentialfilesPath + "/data_differential_epsilon" + epsilon + "_delta" + delta + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
+            }
             StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), epsilon, delta);
             statistics.add(reviewData.getFullStatisticsDiferencial()); // Save the statistics in the statistics array
             risks.add(reviewData.getRiskMeasuresDiferencial()); // Save the risks in the risks array
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Dados Anonimizados com sucesso");
     }
 
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {
-        return "epsilon;delta;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(NUMERO_DE_QUASE_IDENTIFICADORES) +
+        return "epsilon;delta;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(NUMBER_OF_QUASE_IDENTIFIERS) +
                 "discernibility;avg. class size;row squared error";
     }
 
@@ -251,7 +252,11 @@ public class DifferencialPrivacyController {
 
             bw.close();
         } catch (IOException e) {
-            System.out.println("Erro ao salvar arquivo CSV");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error saving CSV file");
+            alert.setContentText("An error occurred while saving the CSV file.");
+            alert.showAndWait();
         }
     }
 }
