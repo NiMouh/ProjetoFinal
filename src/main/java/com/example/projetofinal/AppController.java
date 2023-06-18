@@ -32,7 +32,7 @@ public class AppController {
     @FXML
     private BorderPane mainPage;
     @FXML
-    private VBox homeContent,navigationBar;
+    private VBox homeContent, navigationBar;
     @FXML
     private TextField kMin, kStep, kMax;
     @FXML
@@ -235,23 +235,31 @@ public class AppController {
     public void anonymizeWithK(Data dados, int valorK) {
         ARXAnonymizer anonymizer = new ARXAnonymizer();
         ARXConfiguration configuration = ARXConfiguration.create();
+        ARXResult result = null;
         configuration.addPrivacyModel(new KAnonymity(valorK));
         configuration.setSuppressionLimit(1); // 100% de linhas suprimidas
         dados.getHandle().release();
         try {
-            ARXResult result = anonymizer.anonymize(dados, configuration);
-            String firstQuasiIdentifier = inputData.getDefinition().getQuasiIdentifyingAttributes().iterator().next();
-            DataHandle handle = result.getOutput(false);
-            if (handle != null){
-                handle.sort(true, dados.getHandle().getColumnIndexOf(firstQuasiIdentifier));
-                handle.save(filesPath + "/data_anonymity_" + valorK + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
-            }
-            StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), valorK);
-            statistics.add(reviewData.getFullStatistics()); // Save the statistics in the statistics array
-            risks.add(reviewData.getRiskMeasures()); // Save the risks in the risks array
+            result = anonymizer.anonymize(dados, configuration);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        if (result == null)
+            return;
+        String firstQuasiIdentifier = inputData.getDefinition().getQuasiIdentifyingAttributes().iterator().next();
+        DataHandle handle = result.getOutput(false);
+        if (handle != null) {
+            handle.sort(true, dados.getHandle().getColumnIndexOf(firstQuasiIdentifier));
+            try {
+                handle.save(filesPath + "/data_anonymity_" + valorK + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), valorK);
+        statistics.add(reviewData.getFullStatistics()); // Save the statistics in the statistics array
+        risks.add(reviewData.getRiskMeasures()); // Save the risks in the risks array
+
     }
 
     // Function to create the header of the CSV file (statistics.csv)

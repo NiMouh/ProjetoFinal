@@ -113,7 +113,7 @@ public class DifferencialPrivacyController {
             double stepEpsilon = Double.parseDouble(stepEpsilonField.getText());
 
             // If the values are invalid, show an error message
-            if (minEpsilon > maxEpsilon || minEpsilon < 0.01 || maxEpsilon > 10 || fixedDelta > 0.01 || fixedDelta < 0.00001|| stepEpsilon > maxEpsilon) {
+            if (minEpsilon > maxEpsilon || minEpsilon < 0.01 || maxEpsilon > 10 || fixedDelta > 0.01 || fixedDelta < 0.00001 || stepEpsilon > maxEpsilon) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Invalid Values");
@@ -198,24 +198,33 @@ public class DifferencialPrivacyController {
     private void anonymizeWithDifferencialPrivacy(Data data, double epsilon, double delta) {
         ARXAnonymizer anonymizer = new ARXAnonymizer();
         ARXConfiguration configuration = ARXConfiguration.create();
+        ARXResult result = null;
         configuration.addPrivacyModel(new EDDifferentialPrivacy(epsilon, delta));
         configuration.setHeuristicSearchStepLimit(1000); // Limit the number of iterations
         configuration.setSuppressionLimit(1); // 100% de linhas suprimidas
         data.getHandle().release();
         try {
-            ARXResult result = anonymizer.anonymize(data, configuration);
-            String firstQuasiIdentifier = data.getDefinition().getQuasiIdentifyingAttributes().iterator().next();
-            DataHandle handle = result.getOutput(false);
-            if (handle != null){
-                handle.sort(true, data.getHandle().getColumnIndexOf(firstQuasiIdentifier));
-                handle.save(diferentialfilesPath + "/data_differential_epsilon" + epsilon + "_delta" + delta + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
-            }
-            StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), epsilon, delta);
-            statistics.add(reviewData.getFullStatisticsDiferencial()); // Save the statistics in the statistics array
-            risks.add(reviewData.getRiskMeasuresDiferencial()); // Save the risks in the risks array
+            result = anonymizer.anonymize(data, configuration);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        if (result == null) {
+            return;
+        }
+        String firstQuasiIdentifier = data.getDefinition().getQuasiIdentifyingAttributes().iterator().next();
+        DataHandle handle = result.getOutput(false);
+        if (handle != null) {
+            handle.sort(true, data.getHandle().getColumnIndexOf(firstQuasiIdentifier));
+            try {
+                handle.save(diferentialfilesPath + "/data_differential_epsilon" + epsilon + "_delta" + delta + ".csv", SetupController.delimiter); // Save the anonymized data in a CSV file
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        StatisticsAnonimizedData reviewData = new StatisticsAnonimizedData(result.getOutput(false), epsilon, delta);
+        statistics.add(reviewData.getFullStatisticsDiferencial()); // Save the statistics in the statistics array
+        risks.add(reviewData.getRiskMeasuresDiferencial()); // Save the risks in the risks array
     }
 
     // Function to create the header of the CSV file (statistics.csv)
