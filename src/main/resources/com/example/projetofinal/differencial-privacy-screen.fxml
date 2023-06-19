@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
@@ -27,14 +28,27 @@
    </ScrollPane>
    <VBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0">
       <HBox alignment="CENTER">
-         <RadioButton mnemonicParsing="false" selected="true" text="Vary Epsilon" textFill="WHITE">
-            <HBox.margin>
-               <Insets right="5.0" />
-            </HBox.margin>
-            <toggleGroup>
-               <ToggleGroup fx:id="vary_group" />
-            </toggleGroup>
-         </RadioButton>
+         <children>
+            <RadioButton mnemonicParsing="false" selected="true" text="Vary Epsilon" textFill="WHITE">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin>
+               <toggleGroup>
+                  <ToggleGroup fx:id="vary_group" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" text="Vary Delta" textFill="WHITE" toggleGroup="$vary_group">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin>
+            </RadioButton>
+            <CheckBox fx:id="multiplier" mnemonicParsing="false" selected="true" text="Multiplier" textFill="WHITE" />
+         </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER">
          <TextField fx:id="minEpsilonField" promptText="Min Epsilon Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
             <HBox.margin>
                <Insets right="10.0" />
@@ -56,11 +70,6 @@
          </VBox.margin>
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0">
-         <RadioButton mnemonicParsing="false" text="Vary Delta" textFill="WHITE" toggleGroup="$vary_group">
-            <HBox.margin>
-               <Insets right="15.0" />
-            </HBox.margin>
-         </RadioButton>
          <TextField fx:id="minDeltaField" editable="false" promptText="Min Delta Value" style="-fx-background-color: #343248; -fx-text-fill: white;">
             <HBox.margin>
                <Insets right="10.0" />
@@ -82,7 +91,7 @@
             </HBox.margin>
          </TextField>
       </HBox>
-      <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#calculateDifferencialPrivacy" prefHeight="40.0" prefWidth="170.0" style="-fx-background-color: #6794B5; -fx-border-radius: 5px;" text="Anonimyze with DP" textFill="WHITE">
+      <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#calculateDifferencialPrivacy" prefWidth="170.0" style="-fx-background-color: #6794B5; -fx-border-radius: 5px;" text="Anonimyze with DP" textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>

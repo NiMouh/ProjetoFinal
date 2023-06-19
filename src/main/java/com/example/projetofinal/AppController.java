@@ -264,8 +264,15 @@ public class AppController {
 
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {
-        return "k;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(NUMBER_OF_QUASE_IDENTIFIERS) +
-                "discernibility;avg. class size;row squared error";
+        StringBuilder result = new StringBuilder("k;supressed;");
+
+        for (String attribute : inputData.getDefinition().getQuasiIdentifyingAttributes()) {
+            result.append("gen. intensity_").append(attribute).append(";missings_").append(attribute).append(";entropy_").append(attribute).append(";squared error_").append(attribute).append("; ;");
+        }
+
+        result.append("discernibility;avg. class size;row squared error");
+
+        return result.toString();
     }
 
     // Function to create the header of the CSV file (risk.csv)

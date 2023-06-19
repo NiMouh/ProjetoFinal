@@ -22,6 +22,9 @@ public class DifferencialPrivacyController {
     @FXML
     private TextField minEpsilonField, maxEpsilonField, fixedDeltaField, minDeltaField, stepDeltaField, stepEpsilonField, maxDeltaField, fixedEpsilonField;
 
+    @FXML
+    private CheckBox multiplier;
+
     public ToggleGroup vary_group;
     private ArrayList<String> statistics;
     private ArrayList<String> risks;
@@ -113,7 +116,7 @@ public class DifferencialPrivacyController {
             double stepEpsilon = Double.parseDouble(stepEpsilonField.getText());
 
             // If the values are invalid, show an error message
-            if (minEpsilon > maxEpsilon || minEpsilon < 0.01 || maxEpsilon > 10 || fixedDelta > 0.01 || fixedDelta < 0.00001 || stepEpsilon > maxEpsilon) {
+            if (minEpsilon > maxEpsilon || minEpsilon < 0.01 || maxEpsilon > 10 || fixedDelta > 0.01 || fixedDelta < 0.00001) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Invalid Values");
@@ -154,7 +157,7 @@ public class DifferencialPrivacyController {
             double stepDelta = Double.parseDouble(stepDeltaField.getText());
 
             // If the values are invalid, show an error message
-            if (minDelta > maxDelta || minDelta < 0.00001 || maxDelta > 0.01 || fixedEpsilon > 10 || fixedEpsilon < 0.01 || stepDelta > maxDelta) {
+            if (minDelta > maxDelta || minDelta < 0.0000001 || maxDelta > 0.1 || fixedEpsilon > 10 || fixedEpsilon < 0.01) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Invalid Values");
@@ -174,8 +177,15 @@ public class DifferencialPrivacyController {
             String riskHeader = makeRiskHeader();
             risks.add(riskHeader);
 
-            for (double delta = minDelta; delta <= maxDelta; delta += stepDelta) {
-                anonymizeWithDifferencialPrivacy(inputData, fixedEpsilon, delta);
+            // If the multiplier option is selected, multiply the delta by the step
+            if (multiplier.isSelected()) {
+                for (double delta = minDelta; delta <= maxDelta; delta *= stepDelta) {
+                    anonymizeWithDifferencialPrivacy(inputData, fixedEpsilon, delta);
+                }
+            } else {
+                for (double delta = minDelta; delta <= maxDelta; delta += stepDelta) {
+                    anonymizeWithDifferencialPrivacy(inputData, fixedEpsilon, delta);
+                }
             }
         }
 
@@ -229,8 +239,15 @@ public class DifferencialPrivacyController {
 
     // Function to create the header of the CSV file (statistics.csv)
     public String makeStatisticHeader() {
-        return "epsilon;delta;supressed;" + "gen. intensity;missings;entropy;squared error; ;".repeat(NUMBER_OF_QUASE_IDENTIFIERS) +
-                "discernibility;avg. class size;row squared error";
+        StringBuilder result = new StringBuilder("epsilon;delta;supressed;");
+
+        for (String attribute : inputData.getDefinition().getQuasiIdentifyingAttributes()) {
+            result.append("gen. intensity_").append(attribute).append(";missings_").append(attribute).append(";entropy_").append(attribute).append(";squared error_").append(attribute).append("; ;");
+        }
+
+        result.append("discernibility;avg. class size;row squared error");
+
+        return result.toString();
     }
 
     // Function to create the header of the CSV file (risk.csv)
